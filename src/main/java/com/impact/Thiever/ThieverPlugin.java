@@ -184,6 +184,13 @@ public class ThieverPlugin extends Plugin {
         }
     }
 
+    // TODO: use below "close" bank in `restockFood()`, findNPC will queue a movement anyway
+    // if (Bank.isOpen()) {
+    //     MousePackets.queueClickPacket();
+    //     MovementPackets.queueMovement(client.getLocalPlayer().getWorldLocation());
+    //     return;
+    // }
+
     private void restockFood() { // deposit all and withdraw food
         if (Bank.isOpen()) {
             Optional<Widget> foodInBank = Bank.search().nameContains(config.foodToConsume()).first();
@@ -210,6 +217,16 @@ public class ThieverPlugin extends Plugin {
         }
     }
 
+    private Optional<TileObject> findBank() {
+        // TODO: EthanAPI.findObject() instead ?
+        Optional<TileObject> bankBooth = TileObjects.search().filter(tileObject -> {
+            ObjectComposition objectComposition = TileObjectQuery.getObjectComposition(tileObject);
+            return getName().contains("Bank") ||
+                    Arrays.stream(objectComposition.getActions()).anyMatch(action -> action != null && action.contains("Bank"));
+        }).nearestToPlayer();
+        return bankBooth;
+    }
+
     private boolean outOfFood() {
         String itemName = config.foodToConsume();
         return Inventory.search()
@@ -227,16 +244,6 @@ public class ThieverPlugin extends Plugin {
         String itemName = "Coin pouch"; // make static var?
         // return Inventory.search().nameContains(itemName).quantityGreaterThan(numPouchesToOpen).empty();
         return Inventory.getItemAmount(itemName, true) >= numPouchesToOpen;
-    }
-
-    private Optional<TileObject> findBank() {
-        // TODO: EthanAPI.findObject() instead ?
-        Optional<TileObject> bankBooth = TileObjects.search().filter(tileObject -> {
-            ObjectComposition objectComposition = TileObjectQuery.getObjectComposition(tileObject);
-            return getName().contains("Bank") ||
-                    Arrays.stream(objectComposition.getActions()).anyMatch(action -> action != null && action.contains("Bank"));
-        }).nearestToPlayer();
-        return bankBooth;
     }
 
     private final HotkeyListener toggle = new HotkeyListener(() -> config.toggle()) {

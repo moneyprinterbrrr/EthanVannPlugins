@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 import static net.runelite.api.Varbits.QUICK_PRAYER;
 
 @PluginDescriptor(
-        name = "EthanApiPlugin",
+        name = "<html><font color=\"#fcb900\">EthanApiPlugin</font></html>",
         description = "",
         tags = {"ethan"},
         hidden = false

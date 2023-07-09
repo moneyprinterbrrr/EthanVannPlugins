@@ -27,7 +27,7 @@ import javax.swing.*;
 @Slf4j
 @Singleton
 @PluginDescriptor(
-        name = "Packet Utils",
+        name = "<html><font color=\"#fcb900\">Packet Utils</font></html>",
         description = "Packet Utils for Plugins",
         enabledByDefault = true,
         tags = {"ethan"}
