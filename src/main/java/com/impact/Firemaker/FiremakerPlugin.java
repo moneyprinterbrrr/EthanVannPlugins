@@ -97,7 +97,7 @@ public class FiremakerPlugin extends Plugin {
         state = nextState;
         client.addChatMessage(ChatMessageType.GAMEMESSAGE, "Firemaker", "Next state: "+state.name(), null);
         // TODO: add utils with gaussian delay w/ values config
-        tickDelay = ThreadLocalRandom.current().nextInt(2, 5); // reset delay
+        tickDelay = ThreadLocalRandom.current().nextInt(0, 3); // reset delay
     }
 
     private void handleState() {
