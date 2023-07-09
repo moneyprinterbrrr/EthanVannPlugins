@@ -1,6 +1,5 @@
 package com.example.Alchemy;
 
-import net.runelite.client.config.Button;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -46,19 +45,4 @@ public interface AlchemyConfig extends Config {
     default String itemToInteract() {
         return "Rune 2h sword";
     }
-
-    @ConfigItem(keyName = "startButton",
-            name = "Start",
-            description = "",
-            position = 12
-    )
-    default Button startButton() { return new Button(); }
-
-    @ConfigItem(
-            keyName = "stopButton",
-            name = "Stop",
-            description = "",
-            position = 13
-    )
-    default Button stopButton() { return new Button(); }
 }
