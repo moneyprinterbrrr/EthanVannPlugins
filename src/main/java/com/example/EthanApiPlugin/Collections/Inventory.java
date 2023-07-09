@@ -36,8 +36,14 @@ public class Inventory {
         return search().withId(itemId).result().size();
     }
 
+    public static int getItemAmount(String itemName, boolean stacked) {
+        return stacked ?
+                search().withName(itemName).first().map(Widget::getItemQuantity).orElse(0) :
+                search().withName(itemName).result().size();
+    }
+
     public static int getItemAmount(String itemName) {
-        return search().withName(itemName).result().size();
+        return getItemAmount(itemName, false);
     }
 
     @Subscribe

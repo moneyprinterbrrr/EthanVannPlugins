@@ -118,6 +118,7 @@ public class AlchemyPlugin extends Plugin {
         Optional<Widget> item = Inventory.search()
                 //.filter(i -> i.getName().toLowerCase().contains(itemName.toLowerCase())) // for both lowercase
                 .nameContains(itemName)
+                // .first(); // TODO: can use .first() instead
                 .result().stream().findFirst();
 
         Optional<Widget> highAlchemySpellIcon = Widgets.search().withId(HIGH_ALCHEMY_WIDGET_ID).first();

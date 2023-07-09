@@ -7,7 +7,6 @@ import net.runelite.client.config.Keybind;
 
 @ConfigGroup("Alchemy")
 public interface AlchemyConfig extends Config {
-    // TODO: switch to start /stop buttons
     @ConfigItem(
             keyName = "Toggle",
             name = "Toggle",
@@ -36,6 +35,7 @@ public interface AlchemyConfig extends Config {
     default String itemNatureRune() {
         return "Nature rune";
     }
+
     @ConfigItem(
             name = "Alchemy Item",
             keyName = "itemToInteract",

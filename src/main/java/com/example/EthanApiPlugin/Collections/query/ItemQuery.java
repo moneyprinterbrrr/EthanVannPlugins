@@ -127,4 +127,9 @@ public class ItemQuery {
         ItemComposition itemComposition = EthanApiPlugin.itemDefs.get(item.getItemId());
         return itemComposition.getNote() != -1;
     }
+
+    public static ItemComposition getItemComposition(Widget item) {
+        ItemComposition itemComposition = EthanApiPlugin.itemDefs.get(item.getItemId());
+        return itemComposition;
+    }
 }

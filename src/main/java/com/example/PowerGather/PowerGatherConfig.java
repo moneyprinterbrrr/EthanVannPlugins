@@ -7,7 +7,6 @@ import net.runelite.client.config.Keybind;
 
 @ConfigGroup("PowerGather")
 public interface PowerGatherConfig extends Config {
-    // TODO: switch to start /stop buttons
     @ConfigItem(
             keyName = "Toggle",
             name = "Toggle",
@@ -16,6 +15,7 @@ public interface PowerGatherConfig extends Config {
     default Keybind toggle() {
         return Keybind.NOT_SET;
     }
+
     @ConfigItem(
             name = "Object",
             keyName = "objectToInteract",

@@ -77,13 +77,13 @@ public class PowerGatherPlugin extends Plugin {
         }
 
         if (tickDelay > 0) {
-            client.addChatMessage(ChatMessageType.GAMEMESSAGE, "PowerSkiller", "Delaying... ticks left: "+tickDelay, null);
+            client.addChatMessage(ChatMessageType.GAMEMESSAGE, "PowerGather", "Delaying... ticks left: "+tickDelay, null);
             tickDelay--;
             return;
         }
 
         state = nextState;
-        client.addChatMessage(ChatMessageType.GAMEMESSAGE, "PowerSkiller", "Next state: "+state.name(), null);
+        client.addChatMessage(ChatMessageType.GAMEMESSAGE, "PowerGather", "Next state: "+state.name(), null);
         // TODO: add utils with gaussian delay w/ values config
         tickDelay = ThreadLocalRandom.current().nextInt(3, 6); // reset delay
     }
@@ -151,8 +151,7 @@ public class PowerGatherPlugin extends Plugin {
     private boolean isInventoryReset() {
         return Inventory.search()
                 .filter(item -> !shouldKeep(item.getName()) && !isTool(item.getName())) // using our shouldKeep method, we can filter the items here to only include the ones we want to drop.
-                .result()
-                .size() == 0; // we will know that the inventory is reset if the size becomes the amount of slots - empty slots
+                .empty();
     }
 
     private boolean isDroppingItems() {
