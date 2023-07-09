@@ -11,6 +11,10 @@ import com.example.UpkeepPlugin.UpkeepPlugin;
 import com.example.gauntletFlicker.gauntletFlicker;
 import com.example.harpoon2ticker.SwordFish2Tick;
 import com.example.superglass.SuperGlassMakerPlugin;
+import com.example.RunEnabler.RunEnabler;
+import com.example.PowerGather.PowerGatherPlugin;
+import com.example.NeverLog.NeverLogPlugin;
+import com.example.Alchemy.AlchemyPlugin;
 import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;
 
@@ -19,8 +23,9 @@ public class ExamplePluginTest {
         ExternalPluginManager.loadBuiltin(EthanApiPlugin.class, PacketUtilsPlugin.class, EthanPrayerFlickerPlugin.class,
                 gauntletFlicker.class,
                 SuperGlassMakerPlugin.class, UpkeepPlugin.class, LavaRunecrafterPlugin.class,
-                NightmareHelperPlugin.class, SwordFish2Tick.class
-                , e3t4g.class, AutoTele.class);
+                NightmareHelperPlugin.class, SwordFish2Tick.class, e3t4g.class,
+                AutoTele.class, RunEnabler.class, PowerGatherPlugin.class,
+                NeverLogPlugin.class, AlchemyPlugin.class);
         RuneLite.main(args);
     }
 }

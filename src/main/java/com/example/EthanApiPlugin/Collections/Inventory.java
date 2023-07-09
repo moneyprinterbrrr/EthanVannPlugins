@@ -3,9 +3,10 @@ package com.example.EthanApiPlugin.Collections;
 import com.example.EthanApiPlugin.Collections.query.ItemQuery;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
-import net.runelite.api.events.GameStateChanged;
-import net.runelite.api.events.ItemContainerChanged;
+import net.runelite.api.events.*;
+import net.runelite.api.ScriptID;
 import net.runelite.api.widgets.Widget;
+import net.runelite.api.widgets.WidgetID;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.RuneLite;
 import net.runelite.client.eventbus.Subscribe;
@@ -47,6 +48,16 @@ public class Inventory {
                     Arrays.stream(client.getWidget(WidgetInfo.INVENTORY).getDynamicChildren()).filter(Objects::nonNull).filter(x -> x.getItemId() != 6512 && x.getItemId() != -1).collect(Collectors.toList());
         }
     }
+
+    @Subscribe
+    public void onWidgetLoaded(WidgetLoaded e) {
+        // Inventory reload, when bank inventory or GE offers closed
+        if (e.getGroupId() == WidgetID.INVENTORY_GROUP_ID) {
+            Inventory.inventoryItems =
+                    Arrays.stream(client.getWidget(WidgetInfo.INVENTORY).getDynamicChildren()).filter(Objects::nonNull).filter(x -> x.getItemId() != 6512 && x.getItemId() != -1).collect(Collectors.toList());
+        }
+    }
+
 
     @Subscribe
     public void onGameStateChanged(GameStateChanged gameStateChanged) {
