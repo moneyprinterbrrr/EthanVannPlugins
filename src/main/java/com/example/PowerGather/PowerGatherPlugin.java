@@ -152,7 +152,7 @@ public class PowerGatherPlugin extends Plugin {
         return Inventory.search()
                 .filter(item -> !shouldKeep(item.getName()) && !isTool(item.getName())) // using our shouldKeep method, we can filter the items here to only include the ones we want to drop.
                 .result()
-                .size() == 28 - config.emptySlots(); // we will know that the inventory is reset if the size becomes the amount of slots - empty slots
+                .size() == 0; // we will know that the inventory is reset if the size becomes the amount of slots - empty slots
     }
 
     private boolean isDroppingItems() {
