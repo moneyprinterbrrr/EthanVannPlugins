@@ -33,7 +33,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @PluginDependency(EthanApiPlugin.class)
 @PluginDependency(PacketUtilsPlugin.class)
 @PluginDescriptor(
-        name = "Theiver",
+        name = "Thiever",
         description = "Pickpockets NPC of your choosing, consumes food, banks",
         tags = {"ethan", "skilling"}
 )
@@ -121,7 +121,7 @@ public class ThieverPlugin extends Plugin {
             return State.ANIMATING;
         }
 
-        if (!hasFood()) {
+        if (outOfFood()) {
             return State.BANK;
         }
 
@@ -187,16 +187,15 @@ public class ThieverPlugin extends Plugin {
     private void restockFood() { // deposit all and withdraw food
         if (Bank.isOpen()) {
             Optional<Widget> foodInBank = Bank.search().nameContains(config.foodToConsume()).first();
-            if (!hasFood() && foodInBank.isPresent()) {
+            if (outOfFood() && foodInBank.isPresent()) {
                 // Deposit everything (helps for empty jugs of wine)
                 Widget widget = client.getWidget(WidgetInfo.BANK_DEPOSIT_INVENTORY);
                 MousePackets.queueClickPacket();
                 WidgetPackets.queueWidgetAction(widget, "Deposit", "Deposit inventory");
 
-                // Withdraw food, No more than 26 for coin pouches and coins
-                int withdrawNoise = ThreadLocalRandom.current().nextInt(0, 7);
-                int withdrawAmount = 17 + withdrawNoise;
-                BankInteraction.withdrawX(foodInBank.get(), withdrawAmount);
+                 // BankInteraction.withdrawX kept enter amount interface up...
+                 BankInteraction.useItem(x -> x.getName().contains(config.foodToConsume()), "Withdraw-10");
+                 BankInteraction.useItem(x -> x.getName().contains(config.foodToConsume()), "Withdraw-10");
                 return;
             }
         } else {
@@ -211,9 +210,10 @@ public class ThieverPlugin extends Plugin {
         }
     }
 
-    private boolean hasFood() {
+    private boolean outOfFood() {
+        String itemName = config.foodToConsume();
         return Inventory.search()
-                .filter(item -> !item.getName().contains("Coin")) // should handle: Coins, Coin pouch
+                .filter(item -> item.getName().contains(itemName))
                 .empty();
     }
 
@@ -245,7 +245,6 @@ public class ThieverPlugin extends Plugin {
             toggle();
         }
     };
-
 
     public void toggle() {
         if (client.getGameState() != GameState.LOGGED_IN) {
