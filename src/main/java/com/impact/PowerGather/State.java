@@ -1,4 +1,4 @@
-package com.example.PowerGather;
+package com.impact.PowerGather;
 
 public enum State {
     FIND_OBJECT,

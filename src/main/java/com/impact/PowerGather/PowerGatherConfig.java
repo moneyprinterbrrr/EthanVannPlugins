@@ -1,4 +1,4 @@
-package com.example.PowerGather;
+package com.impact.PowerGather;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;

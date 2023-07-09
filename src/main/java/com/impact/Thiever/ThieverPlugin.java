@@ -1,4 +1,4 @@
-package com.example.Thiever;
+package com.impact.Thiever;
 
 import com.example.EthanApiPlugin.Collections.*;
 import com.example.EthanApiPlugin.Collections.query.ItemQuery;
@@ -33,7 +33,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @PluginDependency(EthanApiPlugin.class)
 @PluginDependency(PacketUtilsPlugin.class)
 @PluginDescriptor(
-        name = "Thiever",
+        name = "<html><font color=\"#fcb900\">Thiever</font></html>",
         description = "Pickpockets NPC of your choosing, consumes food, banks",
         tags = {"ethan", "skilling"}
 )

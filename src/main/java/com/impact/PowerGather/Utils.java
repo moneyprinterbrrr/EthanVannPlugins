@@ -1,4 +1,4 @@
-package com.example.PowerGather;
+package com.impact.PowerGather;
 
 public class Utils {
     // Note: base delays off ticks

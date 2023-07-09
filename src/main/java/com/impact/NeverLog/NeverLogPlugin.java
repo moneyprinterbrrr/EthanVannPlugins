@@ -1,4 +1,4 @@
-package com.example.NeverLog;
+package com.impact.NeverLog;
 
 import com.example.EthanApiPlugin.EthanApiPlugin;
 import com.example.PacketUtils.PacketUtilsPlugin;
@@ -19,8 +19,8 @@ import static java.awt.event.InputEvent.BUTTON1_DOWN_MASK;
 @PluginDependency(EthanApiPlugin.class)
 @PluginDependency(PacketUtilsPlugin.class)
 @PluginDescriptor(
-        name = "Never Log",
-        description = "",
+        name = "<html><font color=\"#fcb900\">Never Log</font></html>",
+        description = "Never log out, helps with other scripts",
         enabledByDefault = false,
         tags = {"ethan"}
 )

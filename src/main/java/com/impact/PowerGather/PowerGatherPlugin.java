@@ -1,4 +1,4 @@
-package com.example.PowerGather;
+package com.impact.PowerGather;
 
 import com.example.EthanApiPlugin.Collections.Equipment;
 import com.example.EthanApiPlugin.Collections.Inventory;
@@ -31,7 +31,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @PluginDependency(EthanApiPlugin.class)
 @PluginDependency(PacketUtilsPlugin.class)
 @PluginDescriptor(
-        name = "Power Gather",
+        name = "<html><font color=\"#fcb900\">Power Gather</font></html>",
         description = "Will interact with an object and drop all items when inventory is full",
         tags = {"ethan", "skilling"}
 )

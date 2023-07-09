@@ -1,4 +1,4 @@
-package com.example.Thiever;
+package com.impact.Thiever;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;

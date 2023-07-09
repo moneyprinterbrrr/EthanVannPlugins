@@ -1,11 +1,10 @@
-package com.example.Alchemy;
+package com.impact.Alchemy;
 
 import com.example.EthanApiPlugin.Collections.*;
 import com.example.EthanApiPlugin.EthanApiPlugin;
 import com.example.PacketUtils.PacketUtilsPlugin;
 import com.example.Packets.MousePackets;
 import com.example.Packets.WidgetPackets;
-import com.example.Alchemy.AlchemyConfig;
 import com.google.inject.Provides;
 import net.runelite.api.*;
 import net.runelite.api.events.GameTick;
@@ -27,7 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @PluginDependency(EthanApiPlugin.class)
 @PluginDependency(PacketUtilsPlugin.class)
 @PluginDescriptor(
-        name = "Alchemy",
+        name = "<html><font color=\"#fcb900\">Alchemy</font></html>",
         description = "Casts high alchemy on an item",
         tags = {"ethan", "skilling"}
 )
