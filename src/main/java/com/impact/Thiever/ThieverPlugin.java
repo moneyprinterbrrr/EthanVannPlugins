@@ -23,6 +23,7 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.HotkeyListener;
 
 import javax.inject.Inject;
@@ -45,10 +46,17 @@ public class ThieverPlugin extends Plugin {
     private ThieverConfig config;
     @Inject
     private KeyManager keyManager;
-    private State state;
-    private boolean started;
-    private int tickDelay;
-    private int numPouchesToOpen;
+
+    @Inject
+    private OverlayManager overlayManager;
+
+    @Inject
+    private ThieverOverlay overlay;
+
+    State state;
+    boolean started;
+    int tickDelay;
+    int numPouchesToOpen;
 
     private enum State {
         FIND_NPC,
@@ -61,11 +69,13 @@ public class ThieverPlugin extends Plugin {
     @Override
     protected void startUp() throws Exception {
         keyManager.registerKeyListener(toggle);
+        overlayManager.add(overlay);
     }
 
     @Override
     protected void shutDown() throws Exception {
         keyManager.unregisterKeyListener(toggle);
+        overlayManager.remove(overlay);
     }
 
     @Provides
@@ -95,7 +105,7 @@ public class ThieverPlugin extends Plugin {
         state = nextState;
         client.addChatMessage(ChatMessageType.GAMEMESSAGE, "Thiever", "Next state: "+state.name(), null);
         // TODO: add utils with gaussian delay w/ values config
-        tickDelay = ThreadLocalRandom.current().nextInt(3, 6); // reset delay
+        tickDelay = ThreadLocalRandom.current().nextInt(1, 4); // reset delay
     }
 
     private void handleState() {
@@ -160,7 +170,7 @@ public class ThieverPlugin extends Plugin {
         if (item.isPresent()) {
             ItemComposition comp = ItemQuery.getItemComposition(item.get());
             InventoryInteraction.useItem(item.get(), comp.getInventoryActions()[0]);
-            tickDelay = 1; // cast delay
+            tickDelay = 2; // food eat delay
         }
     }
 
@@ -178,7 +188,7 @@ public class ThieverPlugin extends Plugin {
         if (item.isPresent()) {
             ItemComposition comp = ItemQuery.getItemComposition(item.get());
             InventoryInteraction.useItem(item.get(), comp.getInventoryActions()[0]);
-            tickDelay = 1; // cast delay
+            tickDelay = 1; // open pouch delay
             // TODO: add utils with gaussian delay w/ values config
             numPouchesToOpen = ThreadLocalRandom.current().nextInt(0, 28);
         }
@@ -242,8 +252,7 @@ public class ThieverPlugin extends Plugin {
 
     private boolean shouldOpenPouches() {
         String itemName = "Coin pouch"; // make static var?
-        // return Inventory.search().nameContains(itemName).quantityGreaterThan(numPouchesToOpen).empty();
-        return Inventory.getItemAmount(itemName, true) >= numPouchesToOpen;
+        return !Inventory.search().nameContains(itemName).quantityGreaterThan(numPouchesToOpen).empty();
     }
 
     private final HotkeyListener toggle = new HotkeyListener(() -> config.toggle()) {

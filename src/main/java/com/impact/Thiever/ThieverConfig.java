@@ -45,5 +45,13 @@ public interface ThieverConfig extends Config {
     default int hitpointThreshold() {
         return 11;
     }
+
+    @ConfigItem(
+            name = "Disable Paint",
+            keyName = "disablePaint",
+            description = "will disable drawing anything on screen",
+            position = 3
+    )
+    default boolean disablePaint() { return false; }
 }
 
