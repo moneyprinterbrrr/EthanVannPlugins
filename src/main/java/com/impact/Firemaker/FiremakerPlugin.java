@@ -35,7 +35,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @PluginDependency(PacketUtilsPlugin.class)
 @PluginDescriptor(
         name = "<html><font color=\"#fcb900\">Firemaker</font></html>",
-        description = "Burns logs in Varrock for efficiency",
+        description = "Burns logs at Varrock for efficiency",
         tags = {"ethan", "skilling"}
 )
 public class FiremakerPlugin extends Plugin {
