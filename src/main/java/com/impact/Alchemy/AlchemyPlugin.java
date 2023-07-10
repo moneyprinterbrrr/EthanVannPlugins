@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @PluginDependency(EthanApiPlugin.class)
 @PluginDependency(PacketUtilsPlugin.class)
 @PluginDescriptor(
-        name = "<html><font color=\"#fcb900\">Alchemy</font></html>",
+        name = "<html><font color=\"#fa5555\">Alchemy</font></html>",
         description = "Casts high alchemy on an item",
         tags = {"ethan", "skilling"}
 )

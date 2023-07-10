@@ -31,7 +31,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @PluginDependency(EthanApiPlugin.class)
 @PluginDependency(PacketUtilsPlugin.class)
 @PluginDescriptor(
-        name = "<html><font color=\"#fcb900\">Power Gather</font></html>",
+        name = "<html><font color=\"#fa5555\">Power Gather</font></html>",
         description = "Will interact with an object and drop all items when inventory is full",
         tags = {"ethan", "skilling"}
 )

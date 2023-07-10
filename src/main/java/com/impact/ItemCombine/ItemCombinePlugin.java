@@ -34,7 +34,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 @PluginDescriptor(
-        name = "<html><font color=\"#fcb900\">Item Combine</font></html>",
+        name = "<html><font color=\"#fa5555\">Item Combine</font></html>",
         description = "Automatically banks & combines items for you",
         enabledByDefault = false,
         tags = {"ethan"}

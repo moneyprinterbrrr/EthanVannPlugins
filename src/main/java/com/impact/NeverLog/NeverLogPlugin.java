@@ -19,7 +19,7 @@ import static java.awt.event.InputEvent.BUTTON1_DOWN_MASK;
 @PluginDependency(EthanApiPlugin.class)
 @PluginDependency(PacketUtilsPlugin.class)
 @PluginDescriptor(
-        name = "<html><font color=\"#fcb900\">Never Log</font></html>",
+        name = "<html><font color=\"#fa5555\">Never Log</font></html>",
         description = "Never log out, helps with other scripts",
         enabledByDefault = false,
         tags = {"ethan"}

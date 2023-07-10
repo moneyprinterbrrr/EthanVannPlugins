@@ -6,6 +6,7 @@ import com.example.InteractionApi.BankInteraction;
 import com.example.InteractionApi.TileObjectInteraction;
 import com.example.PacketUtils.PacketUtilsPlugin;
 import com.example.Packets.MousePackets;
+import com.example.Packets.ObjectPackets;
 import com.example.Packets.WidgetPackets;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
@@ -35,8 +36,8 @@ import java.util.stream.Collectors;
 @PluginDependency(EthanApiPlugin.class)
 @PluginDependency(PacketUtilsPlugin.class)
 @PluginDescriptor(
-        name = "<html><font color=\"#fcb900\">Lava Crafter</font></html>",
-        description = "Crafts lava runes",
+        name = "<html><font color=\"#fa5555\">Lava Crafter</font></html>",
+        description = "Crafts lava runes, keep earth rune stack in inventory",
         tags = {"ethan", "skilling"}
 )
 public class LavaCrafterPlugin extends Plugin {
@@ -59,6 +60,7 @@ public class LavaCrafterPlugin extends Plugin {
 
     Random r = new Random();
     int nextRunVal = r.nextInt(99) + 1;
+    private boolean hasFlickedRun = false;
 
     private MenuEntry entry;
 
@@ -138,7 +140,7 @@ public class LavaCrafterPlugin extends Plugin {
 
         if (type == ChatMessageType.GAMEMESSAGE)
         {
-            if (state == LavaCrafterState.TELE_DUEL_ARENA || state == LavaCrafterState.TELE_CASTLE_WARS)
+            if (state == LavaCrafterState.TELE_PVP_ARENA || state == LavaCrafterState.TELE_CASTLE_WARS)
             {
                 if (msg.contains("ring of dueling"))
                 {
@@ -197,12 +199,6 @@ public class LavaCrafterPlugin extends Plugin {
         if (client.getLocalPlayer() == null)
             return;
 
-        //if we toggled run, there is already a menu entry to be processed. skip the tick.
-        if (handleRunOnGameTick())
-        {
-            return;
-        }
-
         handleTaskCompletions();
 
         if (tickDelay > 0)
@@ -227,24 +223,21 @@ public class LavaCrafterPlugin extends Plugin {
         }
     }
 
-    public boolean handleRunOnGameTick()
+    public void handleRun()
     {
         if (!config.autoEnableRun())
-            return false;
+            return;
 
         boolean runEnabled = client.getVarpValue(173) == 1;
         int energy = client.getEnergy();
 
-        if (!runEnabled && energy > nextRunVal)
+        if (!runEnabled && !hasFlickedRun && energy > nextRunVal * 100)
         {
             MousePackets.queueClickPacket();
             WidgetPackets.queueWidgetActionPacket(1, 10485787, -1, -1);
             nextRunVal = r.nextInt(99) + 1;
-
-            return true;
+            hasFlickedRun = !hasFlickedRun;
         }
-
-        return false;
     }
 
     private void handleTaskCompletions()
@@ -257,10 +250,6 @@ public class LavaCrafterPlugin extends Plugin {
                     tickDelay = getRandomTickDelay();
                     iterateState();
                 }
-                break;
-            case USE_EARTH_RUNES:
-                //todo: (unnecessary?)
-                iterateState();
                 break;
             case DEPOSIT_LAVAS:
                 if (getInventoryItem(ItemID.LAVA_RUNE) == null)
@@ -346,21 +335,18 @@ public class LavaCrafterPlugin extends Plugin {
                 state = LavaCrafterState.WITHDRAW_ESSENCE;
                 break;
             case WITHDRAW_ESSENCE:
-                state = LavaCrafterState.TELE_DUEL_ARENA;
+                state = LavaCrafterState.TELE_PVP_ARENA;
                 break;
-            case TELE_DUEL_ARENA:
+            case TELE_PVP_ARENA:
                 state = LavaCrafterState.ENTER_RUINS;
                 break;
             case ENTER_RUINS:
                 if (config.useMagicImbue())
                     state = LavaCrafterState.CAST_MAGIC_IMBUE;
                 else
-                    state = LavaCrafterState.USE_EARTH_RUNES;
+                    state = LavaCrafterState.USE_EARTHS_ON_ALTAR;
                 break;
             case CAST_MAGIC_IMBUE:
-                state = LavaCrafterState.USE_EARTH_RUNES;
-                break;
-            case USE_EARTH_RUNES:
                 state = LavaCrafterState.USE_EARTHS_ON_ALTAR;
                 break;
             case USE_EARTHS_ON_ALTAR:
@@ -402,10 +388,20 @@ public class LavaCrafterPlugin extends Plugin {
                 if (!object.isPresent())
                     return;
 
-                MousePackets.queueClickPacket();
-                TileObjectInteraction.interact(object.get(), state.option);
-                return;
-                // return new MenuEntry(state.option, state.target, state.identifier, state.opcode, object.getSceneMinLocation().getX(), object.getSceneMinLocation().getY(), false);
+                switch (state)
+                {
+                    case USE_EARTHS_ON_ALTAR:
+                        hasFlickedRun = false;
+                        MousePackets.queueClickPacket();
+                        ObjectPackets.queueWidgetOnTileObject(getInventoryItem(ItemID.EARTH_RUNE), object.get());
+                        return;
+
+                    default: // USE_BANK_CHEST, ENTER_RUINS
+                        handleRun();
+                        MousePackets.queueClickPacket();
+                        TileObjectInteraction.interact(object.get(), state.option);
+                        return;
+                }
 
             case BANK_ITEM:
                 List<Integer> bankItemIds = null;
@@ -441,25 +437,21 @@ public class LavaCrafterPlugin extends Plugin {
                 Bank.search().idInList(bankItemIds).first()
                         .ifPresent(item -> BankInteraction.useItem(item, state.option));
                 return;
-                // return new MenuEntry(state.option, state.target, state.identifier, state.opcode, bankItem.getWidget().getIndex(), state.param1, false);
 
-            case INVENTORY_ITEM:
+            case BANK_INVENTORY_ITEM:
 
-                Widget inventoryItem = null;
+                Widget bankInventoryItem = null;
 
                 switch (state)
                 {
                     case DEPOSIT_LAVAS:
-                        inventoryItem = getInventoryItem(ItemID.LAVA_RUNE);
+                        bankInventoryItem = getBankInventoryItem(ItemID.LAVA_RUNE);
 
-                        if (inventoryItem == null)
+                        if (bankInventoryItem == null)
                         {
                             this.state = LavaCrafterState.WITHDRAW_TALISMAN;
                         }
 
-                        break;
-                    case USE_EARTH_RUNES:
-                        inventoryItem = getInventoryItem(ItemID.EARTH_RUNE);
                         break;
                     case WEAR_BINDING_NECKLACE:
                         if (hasBindingNecklace())
@@ -469,9 +461,9 @@ public class LavaCrafterPlugin extends Plugin {
                             return;
                         }
 
-                        inventoryItem = getInventoryItem(ItemID.BINDING_NECKLACE);
+                        bankInventoryItem = getBankInventoryItem(ItemID.BINDING_NECKLACE);
 
-                        if (inventoryItem == null)
+                        if (bankInventoryItem == null)
                         {
                             this.state = LavaCrafterState.WITHDRAW_BINDING_NECKLACE;
                         }
@@ -485,9 +477,9 @@ public class LavaCrafterPlugin extends Plugin {
                             return;
                         }
 
-                        inventoryItem = getInventoryItem(ItemID.RING_OF_DUELING1, ItemID.RING_OF_DUELING2, ItemID.RING_OF_DUELING3, ItemID.RING_OF_DUELING4, ItemID.RING_OF_DUELING5, ItemID.RING_OF_DUELING6, ItemID.RING_OF_DUELING7,ItemID.RING_OF_DUELING8);
+                        bankInventoryItem = getBankInventoryItem(ItemID.RING_OF_DUELING1, ItemID.RING_OF_DUELING2, ItemID.RING_OF_DUELING3, ItemID.RING_OF_DUELING4, ItemID.RING_OF_DUELING5, ItemID.RING_OF_DUELING6, ItemID.RING_OF_DUELING7,ItemID.RING_OF_DUELING8);
 
-                        if (inventoryItem == null)
+                        if (bankInventoryItem == null)
                         {
                             this.state = LavaCrafterState.WITHDRAW_DUELING_RING;
                         }
@@ -495,23 +487,31 @@ public class LavaCrafterPlugin extends Plugin {
                         break;
                 }
 
-                if (inventoryItem == null)
+                if (bankInventoryItem == null)
                     return;
 
                 MousePackets.queueClickPacket();
-                WidgetPackets.queueWidgetAction(inventoryItem, state.option); //queueWidgetOnWidget(itemOne, itemTwo);
+                WidgetPackets.queueWidgetAction(bankInventoryItem, state.option); //queueWidgetOnWidget(itemOne, itemTwo);
                 return;
-                // return new MenuEntry(state.option, state.target, state.identifier, state.opcode, inventoryItem.getWidget().getIndex(), state.param1, false);
 
             default:
-                // States left: TELE_DUEL_ARENA, CAST_MAGIC_IMBUE, TELE_CASTLE_WARS
-                Optional<Widget> actionWidget = Widgets.search().withId(state.param1).first();
-                if (actionWidget.isPresent()) {
-                    MousePackets.queueClickPacket();
-                    WidgetPackets.queueWidgetAction(actionWidget.get(), state.option);
+                switch (state) {
+                    case CAST_MAGIC_IMBUE:
+                        // TODO: not sure if this works
+                        Optional<Widget> actionWidget = Widgets.search().withId(state.param1).first();
+                        if (actionWidget.isPresent()) {
+                            MousePackets.queueClickPacket();
+                            WidgetPackets.queueWidgetAction(actionWidget.get(), state.option);
+                        }
+                        return;
+                    default: // TELE_PVP_ARENA, TELE_CASTLE_WARS
+                        Optional<EquipmentItemWidget> ringWidget = Equipment.search().nameContains("Ring of dueling(").first();
+                        if (ringWidget.isPresent()) {
+                            MousePackets.queueClickPacket();
+                            WidgetPackets.queueWidgetAction(ringWidget.get(), state.option);
+                        }
+                        return;
                 }
-                return;
-                // return new MenuEntry(state.option, state.target, state.identifier, state.opcode, state.param0, state.param1, false);
         }
     }
 
@@ -530,6 +530,17 @@ public class LavaCrafterPlugin extends Plugin {
     public Widget getInventoryItem(int... ids)
     {
         Optional<Widget> item = Inventory.search()
+                .idInList(Arrays.stream(ids).boxed().collect(Collectors.toList()))
+                .first();
+        if (item.isPresent()) {
+            return item.get();
+        }
+        return null;
+    }
+
+    public Widget getBankInventoryItem(int... ids)
+    {
+        Optional<Widget> item = BankInventory.search()
                 .idInList(Arrays.stream(ids).boxed().collect(Collectors.toList()))
                 .first();
         if (item.isPresent()) {

@@ -51,7 +51,7 @@ public class ThieverOverlay extends Overlay {
 
         panelComponent.getChildren().add(TitleComponent.builder()
                 .text("Impact Thiever")
-                .color(Color.PINK)
+                .color(Color.decode("#fa5555"))
                 .build());
 
         if (plugin.state != null)

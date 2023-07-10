@@ -51,7 +51,7 @@ public class LavaCrafterOverlay extends Overlay {
 
         panelComponent.getChildren().add(TitleComponent.builder()
                 .text("Impact Lava Crafter")
-                .color(Color.PINK)
+                .color(Color.decode("#fa5555"))
                 .build());
 
         if (plugin.watch != null && plugin.watch.isStarted()) {
@@ -68,8 +68,13 @@ public class LavaCrafterOverlay extends Overlay {
                     .color(Color.ORANGE)
                     .build());
         }
+        panelComponent.getChildren().add(TitleComponent.builder()
+                .text("Flick run at: " + plugin.nextRunVal)
+                .color(Color.ORANGE)
+                .build());
 
-        panelComponent.setPreferredSize(new Dimension(175, 100));
+
+        panelComponent.setPreferredSize(new Dimension(200, 110));
         panelComponent.setBackgroundColor(Color.BLACK);
 
         return panelComponent.render(graphics);

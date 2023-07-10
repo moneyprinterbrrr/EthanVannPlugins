@@ -100,7 +100,7 @@ public interface LavaCrafterConfig extends Config {
     @ConfigItem(
             position = 11,
             keyName = "levelStopConditionValue",
-            name = "Level To Stop @",
+            name = "Level To Stop at",
             description = ""
     )
     default int levelStopConditionValue() { return 99; }

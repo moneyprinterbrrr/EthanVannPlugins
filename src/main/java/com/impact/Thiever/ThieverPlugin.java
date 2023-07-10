@@ -34,7 +34,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @PluginDependency(EthanApiPlugin.class)
 @PluginDependency(PacketUtilsPlugin.class)
 @PluginDescriptor(
-        name = "<html><font color=\"#fcb900\">Thiever</font></html>",
+        name = "<html><font color=\"#fa5555\">Thiever</font></html>",
         description = "Pickpockets NPC of your choosing, consumes food, banks",
         tags = {"ethan", "skilling"}
 )

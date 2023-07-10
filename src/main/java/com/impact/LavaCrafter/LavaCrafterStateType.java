@@ -4,5 +4,5 @@ public enum LavaCrafterStateType {
     DEFAULT,
     GAME_OBJECT,
     BANK_ITEM,
-    INVENTORY_ITEM
+    BANK_INVENTORY_ITEM
 }
