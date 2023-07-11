@@ -62,7 +62,6 @@ public class ThieverOverlay extends Overlay {
                     .build());
         }
 
-
         panelComponent.getChildren().add(TitleComponent.builder()
                 .text("Delay: " + plugin.tickDelay)
                 .color(Color.ORANGE)

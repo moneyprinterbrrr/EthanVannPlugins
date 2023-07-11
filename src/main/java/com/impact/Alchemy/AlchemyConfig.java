@@ -45,4 +45,12 @@ public interface AlchemyConfig extends Config {
     default String itemToInteract() {
         return "Rune 2h sword";
     }
+
+    @ConfigItem(
+            name = "Disable Paint",
+            keyName = "disablePaint",
+            description = "will disable drawing anything on screen",
+            position = 3
+    )
+    default boolean disablePaint() { return false; }
 }

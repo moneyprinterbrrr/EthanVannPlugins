@@ -1,29 +1,29 @@
-package com.impact.LavaCrafter;
+package com.impact.Firemaker;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import net.runelite.api.Client;
-import static net.runelite.api.MenuAction.RUNELITE_OVERLAY_CONFIG;
 import net.runelite.client.ui.overlay.Overlay;
-import static net.runelite.client.ui.overlay.OverlayManager.OPTION_CONFIGURE;
 import net.runelite.client.ui.overlay.OverlayMenuEntry;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
 import net.runelite.client.ui.overlay.components.PanelComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.awt.*;
+
+import static net.runelite.api.MenuAction.RUNELITE_OVERLAY_CONFIG;
+import static net.runelite.client.ui.overlay.OverlayManager.OPTION_CONFIGURE;
+
 @Singleton
-public class LavaCrafterOverlay extends Overlay {
+public class FiremakerOverlay extends Overlay {
     private Client client;
-    private LavaCrafterPlugin plugin;
-    private LavaCrafterConfig config;
+    private FiremakerPlugin plugin;
+    private FiremakerConfig config;
     private PanelComponent panelComponent = new PanelComponent();
 
     @Inject
-    private LavaCrafterOverlay(Client client, LavaCrafterPlugin plugin, LavaCrafterConfig config)
+    private FiremakerOverlay(Client client, FiremakerPlugin plugin, FiremakerConfig config)
     {
         this.client = client;
         this.plugin = plugin;
@@ -50,33 +50,27 @@ public class LavaCrafterOverlay extends Overlay {
         panelComponent.getChildren().clear();
 
         panelComponent.getChildren().add(TitleComponent.builder()
-                .text("Impact Lava Crafter")
+                .text("Impact PowerGather")
                 .color(Color.decode("#fa5555"))
                 .build());
-
-        if (plugin.watch != null && plugin.watch.isStarted()) {
-            panelComponent.getChildren().add(TitleComponent.builder()
-                    .text("Timer: " + plugin.watch.toString())
-                    .color(Color.ORANGE)
-                    .build());
-        }
 
         if (plugin.state != null)
         {
             panelComponent.getChildren().add(TitleComponent.builder()
-                    .text("State: " + plugin.state.name())
+                    .text("State: " + plugin.state)
                     .color(Color.ORANGE)
                     .build());
         }
 
         panelComponent.getChildren().add(TitleComponent.builder()
-                .text("Flick run at: " + plugin.nextRunVal)
+                .text("Delay: " + plugin.tickDelay)
                 .color(Color.ORANGE)
                 .build());
 
-        panelComponent.setPreferredSize(new Dimension(200, 110));
+        panelComponent.setPreferredSize(new Dimension(175, 130));
         panelComponent.setBackgroundColor(Color.BLACK);
 
         return panelComponent.render(graphics);
     }
 }
+

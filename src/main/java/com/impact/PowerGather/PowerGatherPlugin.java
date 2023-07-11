@@ -21,6 +21,7 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.HotkeyListener;
 
 import javax.inject.Inject;
@@ -42,20 +43,30 @@ public class PowerGatherPlugin extends Plugin {
 
     @Inject
     private PowerGatherConfig config;
+
     @Inject
     private KeyManager keyManager;
-    private State state;
-    private boolean started;
-    private int tickDelay;
+
+    @Inject
+    private OverlayManager overlayManager;
+
+    @Inject
+    private PowerGatherOverlay overlay;
+
+    State state;
+    boolean started;
+    int tickDelay;
 
     @Override
     protected void startUp() throws Exception {
         keyManager.registerKeyListener(toggle);
+        overlayManager.add(overlay);
     }
 
     @Override
     protected void shutDown() throws Exception {
         keyManager.unregisterKeyListener(toggle);
+        overlayManager.remove(overlay);
     }
 
     @Provides
@@ -77,13 +88,11 @@ public class PowerGatherPlugin extends Plugin {
         }
 
         if (tickDelay > 0) {
-            client.addChatMessage(ChatMessageType.GAMEMESSAGE, "PowerGather", "Delaying... ticks left: "+tickDelay, null);
             tickDelay--;
             return;
         }
 
         state = nextState;
-        client.addChatMessage(ChatMessageType.GAMEMESSAGE, "PowerGather", "Next state: "+state.name(), null);
         // TODO: add utils with gaussian delay w/ values config
         tickDelay = ThreadLocalRandom.current().nextInt(3, 6); // reset delay
     }

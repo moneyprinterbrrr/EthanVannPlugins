@@ -45,4 +45,12 @@ public interface PowerGatherConfig extends Config {
     default String itemsToKeep() {
         return "coins,rune pouch,divine rune pouch,looting bag,clue scroll";
     }
+
+    @ConfigItem(
+            name = "Disable Paint",
+            keyName = "disablePaint",
+            description = "will disable drawing anything on screen",
+            position = 3
+    )
+    default boolean disablePaint() { return false; }
 }

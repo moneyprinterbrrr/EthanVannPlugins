@@ -15,6 +15,7 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.HotkeyListener;
 
 import javax.inject.Inject;
@@ -36,11 +37,19 @@ public class AlchemyPlugin extends Plugin {
 
     @Inject
     private AlchemyConfig config;
+
     @Inject
     private KeyManager keyManager;
-    private State state;
-    private boolean started;
-    private int tickDelay;
+
+    @Inject
+    private OverlayManager overlayManager;
+
+    @Inject
+    private AlchemyOverlay overlay;
+
+    State state;
+    boolean started;
+    int tickDelay;
 
     private enum State {
         FIND_ITEM,
@@ -54,11 +63,13 @@ public class AlchemyPlugin extends Plugin {
     @Override
     protected void startUp() throws Exception {
         keyManager.registerKeyListener(toggle);
+        overlayManager.add(overlay);
     }
 
     @Override
     protected void shutDown() throws Exception {
         keyManager.unregisterKeyListener(toggle);
+        overlayManager.remove(overlay);
     }
 
     @Provides
@@ -80,13 +91,11 @@ public class AlchemyPlugin extends Plugin {
         }
 
         if (tickDelay > 0) {
-            client.addChatMessage(ChatMessageType.GAMEMESSAGE, "Alchemy", "Delaying... ticks left: "+tickDelay, null);
             tickDelay--;
             return;
         }
 
         state = nextState;
-        client.addChatMessage(ChatMessageType.GAMEMESSAGE, "Alchemy", "Next state: "+state.name(), null);
         // TODO: add utils with gaussian delay w/ values config
         tickDelay = ThreadLocalRandom.current().nextInt(0, 2); // reset delay
     }
@@ -139,7 +148,6 @@ public class AlchemyPlugin extends Plugin {
                 .result().size();
 
         // TODO: better way to find if items "exists", >= for now can have multiple staffs
-        client.addChatMessage(ChatMessageType.GAMEMESSAGE, "Alchemy", "Number of spell items: " + (numInventoryItems + numEquippedItems), null);
         return numInventoryItems + numEquippedItems >= items.length;
     }
 
@@ -151,7 +159,6 @@ public class AlchemyPlugin extends Plugin {
                 .result().size();
 
         // TODO: better way to find if item "exists", >= for now since items can be unnoted
-        client.addChatMessage(ChatMessageType.GAMEMESSAGE, "Alchemy", "Number of interact items: " + numInventoryItems, null);
         return numInventoryItems >= items.length;
     }
 

@@ -26,7 +26,7 @@ public interface FiremakerConfig extends Config {
         return "Logs";
     }
 
-    // TODO: For now walk, need to missing teleport runes/tabs etc
+    // TODO: For now walk, need to add missing teleport runes/tabs etc
     @ConfigItem(
             name = "Varrock Teleport",
             keyName = "useTeleport",
@@ -36,4 +36,12 @@ public interface FiremakerConfig extends Config {
     default boolean itemNatureRune() {
         return false;
     }
+
+    @ConfigItem(
+            name = "Disable Paint",
+            keyName = "disablePaint",
+            description = "will disable drawing anything on screen",
+            position = 2
+    )
+    default boolean disablePaint() { return false; }
 }

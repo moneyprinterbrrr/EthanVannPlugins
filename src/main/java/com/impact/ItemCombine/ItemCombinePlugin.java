@@ -138,7 +138,7 @@ public class ItemCombinePlugin extends Plugin {
     }
 
     private boolean isDoneMaking() {
-        return Inventory.getEmptySlots() == config.itemOneAmt();
+        return !hasItemOne() || !hasItemTwo();
     }
 
     private void findBank() {

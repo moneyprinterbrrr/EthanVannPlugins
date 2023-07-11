@@ -12,7 +12,6 @@ import com.example.Packets.MousePackets;
 import com.example.Packets.MovementPackets;
 import com.example.Packets.WidgetPackets;
 import com.google.inject.Provides;
-import com.impact.PowerGather.State;
 import net.runelite.api.*;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameTick;
@@ -24,6 +23,7 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.HotkeyListener;
 
 import javax.inject.Inject;
@@ -44,11 +44,19 @@ public class FiremakerPlugin extends Plugin {
 
     @Inject
     private FiremakerConfig config;
+
     @Inject
     private KeyManager keyManager;
-    private State state;
-    private boolean started;
-    private int tickDelay;
+
+    @Inject
+    private OverlayManager overlayManager;
+
+    @Inject
+    private FiremakerOverlay overlay;
+
+    State state;
+    boolean started;
+    int tickDelay;
     private WorldPoint burnStartPoint;
     private int fireLane;
 
@@ -63,11 +71,13 @@ public class FiremakerPlugin extends Plugin {
     @Override
     protected void startUp() throws Exception {
         keyManager.registerKeyListener(toggle);
+        overlayManager.add(overlay);
     }
 
     @Override
     protected void shutDown() throws Exception {
         keyManager.unregisterKeyListener(toggle);
+        overlayManager.remove(overlay);
     }
 
     @Provides
@@ -89,13 +99,11 @@ public class FiremakerPlugin extends Plugin {
         }
 
         if (tickDelay > 0) {
-            client.addChatMessage(ChatMessageType.GAMEMESSAGE, "Firemaker", "Delaying... ticks left: "+tickDelay, null);
             tickDelay--;
             return;
         }
 
         state = nextState;
-        client.addChatMessage(ChatMessageType.GAMEMESSAGE, "Firemaker", "Next state: "+state.name(), null);
         // TODO: add utils with gaussian delay w/ values config
         tickDelay = ThreadLocalRandom.current().nextInt(0, 3); // reset delay
     }
@@ -120,6 +128,7 @@ public class FiremakerPlugin extends Plugin {
             return State.ANIMATING;
         }
 
+        // TODO: breaks on last remaining logs inventory, inventory is not full
         if (Inventory.full() && !atBurnLocation()) {
             // TODO: return config.useTeleport() ? State.TELEPORT_VARROCK : State.WALK_VARROCK;
             return State.WALK_VARROCK;
@@ -143,7 +152,6 @@ public class FiremakerPlugin extends Plugin {
         int nextFireLane = ThreadLocalRandom.current().nextInt(1, numLanes); // start at 1, find new lane
         int xNoise =  ThreadLocalRandom.current().nextInt(0, 4);
         fireLane = (fireLane + nextFireLane) % numLanes;
-        client.addChatMessage(ChatMessageType.GAMEMESSAGE, "Firemaker", "Firelane: "+fireLane, null);
         // subtract lanes: to go south, add noise: to go east
         burnStartPoint = new WorldPoint(3203 + xNoise,3430 - fireLane,0);
 
@@ -169,10 +177,6 @@ public class FiremakerPlugin extends Plugin {
 
             Optional<Widget> logsInBank = Bank.search().nameContains(config.itemToBurn()).first();
              if (outOfLogs() && logsInBank.isPresent()) {
-                // // Deposit everything (helps for empty jugs of wine)
-                // Widget widget = client.getWidget(WidgetInfo.BANK_DEPOSIT_INVENTORY);
-                // MousePackets.queueClickPacket();
-                // WidgetPackets.queueWidgetAction(widget, "Deposit", "Deposit inventory");
 
                 // BankInteraction.withdrawX kept enter amount interface up...
                 BankInteraction.useItem(x -> x.getName().contains(config.itemToBurn()), "Withdraw-All");
