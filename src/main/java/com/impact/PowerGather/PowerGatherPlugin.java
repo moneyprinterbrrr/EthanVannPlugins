@@ -11,6 +11,7 @@ import com.example.InteractionApi.InventoryInteraction;
 import com.example.InteractionApi.NPCInteraction;
 import com.example.InteractionApi.TileObjectInteraction;
 import com.example.PacketUtils.PacketUtilsPlugin;
+import com.example.Packets.ObjectPackets;
 import com.google.inject.Provides;
 import net.runelite.api.*;
 import net.runelite.api.events.GameTick;
@@ -135,7 +136,9 @@ public class PowerGatherPlugin extends Plugin {
 
         TileObjects.search().withName(objectName).nearestToPlayer().ifPresent(tileObject -> {
             ObjectComposition comp = TileObjectQuery.getObjectComposition(tileObject);
-            TileObjectInteraction.interact(tileObject, comp.getActions()[0]); // find the object we're looking for.  this specific example will only work if the first Action the object has is the one that interacts with it.
+            // Fruit stalls is second option, maybe first is when its empty :o
+            String action = comp.getActions()[0] == null ? comp.getActions()[1] : comp.getActions()[0];
+            TileObjectInteraction.interact(tileObject, action); // find the object we're looking for.  this specific example will only work if the first Action the object has is the one that interacts with it.
             // don't *always* do this, you can manually type the possible actions. eg. "Mine", "Chop", "Cook", "Climb".
         });
 
