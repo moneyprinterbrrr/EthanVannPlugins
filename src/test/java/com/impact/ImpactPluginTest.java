@@ -9,6 +9,7 @@ import com.impact.Thiever.ThieverPlugin;
 import com.impact.Firemaker.FiremakerPlugin;
 import com.impact.ItemCombine.ItemCombinePlugin;
 import com.impact.LavaCrafter.LavaCrafterPlugin;
+import com.impact.NightmareZone.NightmareZonePlugin;
 import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;
 
@@ -20,7 +21,8 @@ public class ImpactPluginTest {
         ExternalPluginManager.loadBuiltin(
                 EthanApiPlugin.class, PacketUtilsPlugin.class, PowerGatherPlugin.class,
                 NeverLogPlugin.class, AlchemyPlugin.class, ThieverPlugin.class,
-                FiremakerPlugin.class, ItemCombinePlugin.class, LavaCrafterPlugin.class
+                FiremakerPlugin.class, ItemCombinePlugin.class, LavaCrafterPlugin.class,
+                NightmareZonePlugin.class
         );
         RuneLite.main(args);
     }
