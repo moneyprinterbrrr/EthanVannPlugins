@@ -68,7 +68,7 @@ public class BuyOverloadsTask extends Task
     public void onGameTick(GameTick event)
     {
         //if amount of points is less than doses to buy * 1000
-        if (client.getVar(VarPlayer.NMZ_REWARD_POINTS) / 1500 < (config.overloadDoses() - client.getVarbitValue(3953)))
+        if (client.getVarpValue(VarPlayer.NMZ_REWARD_POINTS) / 1500 < (config.overloadDoses() - client.getVarbitValue(3953)))
         {
             plugin.stopPlugin("Not enough points to buy absorption potions!");
             return;

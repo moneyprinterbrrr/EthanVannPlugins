@@ -3,6 +3,7 @@ package com.impact.NightmareZone.Tasks;
 import com.example.Packets.MousePackets;
 import com.example.Packets.WidgetPackets;
 import net.runelite.api.Client;
+import net.runelite.api.VarPlayer;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
 import com.impact.NightmareZone.Utils;
@@ -31,8 +32,6 @@ public class BenefitsTabTask extends Task
         }
 
         //has absorptions && has overloads
-        System.out.println(Utils.getAbsorptionDoseCount(client));
-        System.out.println(Utils.getOverloadDoseCount(client));
         if (Utils.getAbsorptionDoseCount(client) >= config.absorptionDoses() &&
                 Utils.getOverloadDoseCount(client) >= config.overloadDoses())
             return false;
@@ -131,6 +130,7 @@ public class BenefitsTabTask extends Task
         }
 
         MousePackets.queueClickPacket();
-        WidgetPackets.queueResumePause(benefitTab.getId(), 4);
+        WidgetPackets.queueResumePause(benefitTab.getId(), 5);
+        client.runScript(307, 13500418, 13500420, 13500421, 13500422, 13500422);
     }
 }

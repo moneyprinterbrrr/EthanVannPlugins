@@ -85,7 +85,8 @@ public class BuyAbsorptionsTask extends Task
 		*/
 
         //if amount of points is less than doses to buy * 1000
-        if (client.getVar(VarPlayer.NMZ_REWARD_POINTS) / 1000 < (config.absorptionDoses() - client.getVarbitValue(3954)))
+        System.out.println();
+        if (client.getVarpValue(VarPlayer.NMZ_REWARD_POINTS) / 1000 < (config.absorptionDoses() - client.getVarbitValue(3954)))
         {
             plugin.stopPlugin("Not enough points to buy absorption potions!");
             return;
