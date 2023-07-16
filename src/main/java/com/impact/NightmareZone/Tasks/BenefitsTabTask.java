@@ -133,5 +133,11 @@ public class BenefitsTabTask extends Task
         WidgetPackets.queueResumePause(benefitTab.getId(), 5);
         // TODO: figure out a way to click benefits without client script
         client.runScript(307, 13500418, 13500420, 13500421, 13500422, 13500422);
+
+//        // TODO: example close bank, maybe many other interfaces
+//        Widget w = client.getWidget(786434, 11);
+//        com.example.Packets.MousePackets.queueClickPacket();
+//        com.example.Packets.WidgetPackets.queueResumePause(w.getId(), 11);
+//        client.runScript(29);
     }
 }

@@ -68,6 +68,7 @@ public class WithdrawAbsorptionTask extends Task
         client.setVarcIntValue(VarClientInt.INPUT_TYPE, 7);
         client.setVarcStrValue(VarClientStr.INPUT_TEXT, String.valueOf(config.absorptionDoses() - Utils.getAbsorptionDoseCount(client)));
         client.runScript(681);
-        client.runScript(ScriptID.MESSAGE_LAYER_CLOSE, 0, 0, 0);
+        // TODO: is layer close needed, next task will trigger
+        client.runScript(ScriptID.MESSAGE_LAYER_CLOSE, 1, 1, 0);
     }
 }
