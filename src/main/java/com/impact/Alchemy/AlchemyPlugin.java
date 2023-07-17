@@ -109,6 +109,10 @@ public class AlchemyPlugin extends Plugin {
     }
 
     private State getNextState() {
+        // TODO: allow alching when running
+//        boolean isIdle = !EthanApiPlugin.isMoving() || client.getLocalPlayer().getAnimation() == -1;
+//        boolean isWalking = client.getLocalPlayer().getAnimation() == client.getLocalPlayer().getWalkAnimation();
+//        boolean isRunning = client.getLocalPlayer().getAnimation() == client.getLocalPlayer().getRunAnimation();
         if (EthanApiPlugin.isMoving() || client.getLocalPlayer().getAnimation() != -1) {
             // this is to prevent clicks while animating/moving.
             return State.ANIMATING;
@@ -122,18 +126,16 @@ public class AlchemyPlugin extends Plugin {
     }
 
     private void findAlchemyItem() {
-        String itemName = config.itemToInteract();
-        Optional<Widget> item = Inventory.search()
-                //.filter(i -> i.getName().toLowerCase().contains(itemName.toLowerCase())) // for both lowercase
-                .nameContains(itemName)
-                // .first(); // TODO: can use .first() instead
-                .result().stream().findFirst();
+        String[] alchemyItems = config.itemToInteract().split(",");
+        Optional<Widget> singleItem = Inventory.search()
+                .filter(item -> isItem(item.getName(), alchemyItems))
+                .first();
 
         Optional<Widget> highAlchemySpellIcon = Widgets.search().withId(HIGH_ALCHEMY_WIDGET_ID).first();
-        if (highAlchemySpellIcon.isPresent() && item.isPresent()) {
+        if (highAlchemySpellIcon.isPresent() && singleItem.isPresent()) {
             MousePackets.queueClickPacket();
-            WidgetPackets.queueWidgetOnWidget(highAlchemySpellIcon.get(), item.get());
-            tickDelay = 2; // cast delay
+            WidgetPackets.queueWidgetOnWidget(highAlchemySpellIcon.get(), singleItem.get());
+            tickDelay = 2; // cast delay, TODO: change to 5, when fixing ANIMATE state
         }
     }
 
@@ -152,21 +154,19 @@ public class AlchemyPlugin extends Plugin {
     }
 
     private boolean hasInteractItem() {
-        String[] items = new String[]{config.itemToInteract()};
+        String[] items = config.itemToInteract().split(",");
 
         int numInventoryItems = Inventory.search()
                 .filter(item -> isItem(item.getName(), items))
                 .result().size();
 
-        // TODO: better way to find if item "exists", >= for now since items can be unnoted
-        return numInventoryItems >= items.length;
+        return numInventoryItems >= 1;
     }
 
     private boolean isItem(String name, String[] items) {
         // TODO: Exact match casing for now
-        return Arrays.stream(items) // stream the array using Arrays.stream() from java.util
-//                .anyMatch(i -> name.toLowerCase().contains(i.toLowerCase())); // more likely for user error than the shouldKeep option, but we'll follow the same idea as shouldKeep.
-                .anyMatch(i -> name.contains(i)); // more likely for user error than the shouldKeep option, but we'll follow the same idea as shouldKeep.
+        return Arrays.stream(items)
+                .anyMatch(i -> name.contains(i));
     }
 
     private final HotkeyListener toggle = new HotkeyListener(() -> config.toggle()) {
