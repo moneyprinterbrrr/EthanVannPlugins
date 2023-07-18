@@ -75,6 +75,6 @@ public class WithdrawOverloadTask extends Task
         client.setVarcStrValue(VarClientStr.INPUT_TEXT, String.valueOf(config.overloadDoses() - Utils.getOverloadDoseCount(client)));
         client.runScript(681);
         // TODO: is layer close needed, next task will trigger
-        client.runScript(ScriptID.MESSAGE_LAYER_CLOSE, 1, 1, 0);
+        client.runScript(ScriptID.MESSAGE_LAYER_CLOSE, 1, 1, 1);
     }
 }

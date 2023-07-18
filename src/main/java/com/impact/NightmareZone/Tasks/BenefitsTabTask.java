@@ -129,10 +129,6 @@ public class BenefitsTabTask extends Task
             return;
         }
 
-        // // Packets dont do anything
-        // MousePackets.queueClickPacket();
-        // WidgetPackets.queueResumePause(benefitTab.getId(), 5);
-        // TODO: figure out a way to click benefits without client script
         // https://github.com/Joshua-F/cs2-scripts/blob/master/scripts/%5Bclientscript,nzone_rewards_tabs%5D.cs2
         client.runScript(307, 13500418, 13500420, 13500421, 13500422, 13500422);
     }
