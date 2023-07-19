@@ -1,13 +1,16 @@
 package com.impact.NightmareZone;
 
+import com.example.PacketUtils.PacketUtilsPlugin;
 import com.google.inject.Provides;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.swing.*;
 
 import com.example.EthanApiPlugin.Collections.Inventory;
 import com.impact.NightmareZone.Tasks.*;
+import lombok.SneakyThrows;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
@@ -18,6 +21,8 @@ import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.input.KeyManager;
+import net.runelite.client.plugins.PluginInstantiationException;
+import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.util.Text;
 import net.runelite.client.chat.ChatColorType;
 import net.runelite.client.chat.ChatMessageBuilder;
@@ -93,6 +98,9 @@ public class NightmareZonePlugin extends Plugin
     private NightmareZoneOverlay overlay;
 
     @Inject
+    PluginManager pluginManager;
+
+    @Inject
     private ChatMessageManager chatMessageManager;
 
     boolean started;
@@ -110,8 +118,20 @@ public class NightmareZonePlugin extends Plugin
     public static int rockCakeDelay = 0;
 
     @Override
+    @SneakyThrows
     protected void startUp() throws Exception
     {
+        if (client.getRevision() != PacketUtilsPlugin.CLIENT_REV) {
+            SwingUtilities.invokeLater(() ->
+            {
+                try {
+                    pluginManager.setPluginEnabled(this, false);
+                    pluginManager.stopPlugin(this);
+                } catch (PluginInstantiationException ignored) {
+                }
+            });
+            return;
+        }
         keyManager.registerKeyListener(toggle);
         overlayManager.add(overlay);
         status = "Initializing...";

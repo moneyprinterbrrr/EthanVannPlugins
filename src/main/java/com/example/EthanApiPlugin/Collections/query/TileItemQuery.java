@@ -190,6 +190,13 @@ public class TileItemQuery {
         return tileItems.stream().min(Comparator.comparingInt(tileItem -> tileItem.location.distanceTo(point)));
     }
 
+    public TileItemQuery atLocation(int x, int y, int plane) {
+        WorldPoint p = new WorldPoint(x, y, plane);
+        tileItems =
+                tileItems.stream().filter(tileItem -> tileItem.getLocation().equals(p)).collect(Collectors.toList());
+        return this;
+    }
+
     @SneakyThrows
     public boolean isNoted(ETileItem item) {
         ItemComposition itemComposition = EthanApiPlugin.itemDefs.get(item.tileItem.getId());

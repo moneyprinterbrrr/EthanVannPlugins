@@ -10,6 +10,7 @@ import com.example.Packets.ObjectPackets;
 import com.example.Packets.WidgetPackets;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
+import lombok.SneakyThrows;
 import net.runelite.api.*;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
@@ -19,13 +20,12 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.input.KeyManager;
-import net.runelite.client.plugins.Plugin;
-import net.runelite.client.plugins.PluginDependency;
-import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.*;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.HotkeyListener;
 import org.apache.commons.lang3.time.StopWatch;
 
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -58,6 +58,9 @@ public class LavaCrafterPlugin extends Plugin {
     @Inject
     private LavaCrafterOverlay overlay;
 
+    @Inject
+    PluginManager pluginManager;
+
     Random r = new Random();
     int nextRunVal = r.nextInt(99) + 1;
     private boolean hasFlickedRun = false;
@@ -82,8 +85,20 @@ public class LavaCrafterPlugin extends Plugin {
     }
 
     @Override
+    @SneakyThrows
     protected void startUp() throws Exception
     {
+        if (client.getRevision() != PacketUtilsPlugin.CLIENT_REV) {
+            SwingUtilities.invokeLater(() ->
+            {
+                try {
+                    pluginManager.setPluginEnabled(this, false);
+                    pluginManager.stopPlugin(this);
+                } catch (PluginInstantiationException ignored) {
+                }
+            });
+            return;
+        }
         keyManager.registerKeyListener(toggle);
         overlayManager.add(overlay);
         started = false;

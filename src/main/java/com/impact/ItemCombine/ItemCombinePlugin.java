@@ -15,21 +15,20 @@ import com.example.Packets.MovementPackets;
 import com.example.Packets.WidgetPackets;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.ObjectComposition;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyManager;
-import net.runelite.client.plugins.Plugin;
-import net.runelite.client.plugins.PluginDependency;
-import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.*;
 import net.runelite.client.util.HotkeyListener;
 
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -55,6 +54,8 @@ public class ItemCombinePlugin extends Plugin {
     private ItemCombineConfig config;
     @Inject
     private KeyManager keyManager;
+    @Inject
+    PluginManager pluginManager;
     private boolean started;
     private int afkTicks;
     private boolean deposit;
@@ -67,7 +68,19 @@ public class ItemCombinePlugin extends Plugin {
     }
 
     @Override
+    @SneakyThrows
     protected void startUp() throws Exception {
+        if (client.getRevision() != PacketUtilsPlugin.CLIENT_REV) {
+            SwingUtilities.invokeLater(() ->
+            {
+                try {
+                    pluginManager.setPluginEnabled(this, false);
+                    pluginManager.stopPlugin(this);
+                } catch (PluginInstantiationException ignored) {
+                }
+            });
+            return;
+        }
         keyManager.registerKeyListener(toggle);
     }
 

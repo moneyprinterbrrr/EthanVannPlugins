@@ -13,6 +13,7 @@ import com.example.PacketUtils.PacketUtilsPlugin;
 import com.example.Packets.MousePackets;
 import com.example.Packets.WidgetPackets;
 import com.google.inject.Provides;
+import lombok.SneakyThrows;
 import net.runelite.api.*;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
@@ -20,13 +21,12 @@ import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyManager;
-import net.runelite.client.plugins.Plugin;
-import net.runelite.client.plugins.PluginDependency;
-import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.*;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.util.HotkeyListener;
 
 import javax.inject.Inject;
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -53,6 +53,9 @@ public class ThieverPlugin extends Plugin {
     @Inject
     private ThieverOverlay overlay;
 
+    @Inject
+    PluginManager pluginManager;
+
     State state;
     boolean started;
     int tickDelay;
@@ -67,7 +70,19 @@ public class ThieverPlugin extends Plugin {
     }
 
     @Override
+    @SneakyThrows
     protected void startUp() throws Exception {
+        if (client.getRevision() != PacketUtilsPlugin.CLIENT_REV) {
+            SwingUtilities.invokeLater(() ->
+            {
+                try {
+                    pluginManager.setPluginEnabled(this, false);
+                    pluginManager.stopPlugin(this);
+                } catch (PluginInstantiationException ignored) {
+                }
+            });
+            return;
+        }
         keyManager.registerKeyListener(toggle);
         overlayManager.add(overlay);
     }
@@ -97,13 +112,11 @@ public class ThieverPlugin extends Plugin {
         }
 
         if (tickDelay > 0) {
-            client.addChatMessage(ChatMessageType.GAMEMESSAGE, "Thiever", "Delaying... ticks left: "+tickDelay, null);
             tickDelay--;
             return;
         }
 
         state = nextState;
-        client.addChatMessage(ChatMessageType.GAMEMESSAGE, "Thiever", "Next state: "+state.name(), null);
         // TODO: add utils with gaussian delay w/ values config
         tickDelay = ThreadLocalRandom.current().nextInt(1, 4); // reset delay
     }

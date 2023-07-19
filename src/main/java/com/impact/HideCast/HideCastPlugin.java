@@ -72,5 +72,4 @@ public class HideCastPlugin extends Plugin {
             }
         }
     }
-
 }

@@ -2,14 +2,14 @@ package com.impact.NeverLog;
 
 import com.example.EthanApiPlugin.EthanApiPlugin;
 import com.example.PacketUtils.PacketUtilsPlugin;
+import lombok.SneakyThrows;
 import net.runelite.api.events.GameTick;
 import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.plugins.Plugin;
-import net.runelite.client.plugins.PluginDependency;
-import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.plugins.*;
 import net.runelite.api.Client;
 
 import javax.inject.Inject;
+import javax.swing.*;
 import java.util.Random;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.Executors;
@@ -28,12 +28,27 @@ public class NeverLogPlugin extends Plugin {
     @Inject
     private Client client;
 
+    @Inject
+    PluginManager pluginManager;
+
     private final Random random = new Random();
     private long randomDelay;
 
     @Override
+    @SneakyThrows
     protected void startUp()
     {
+        if (client.getRevision() != PacketUtilsPlugin.CLIENT_REV) {
+            SwingUtilities.invokeLater(() ->
+            {
+                try {
+                    pluginManager.setPluginEnabled(this, false);
+                    pluginManager.stopPlugin(this);
+                } catch (PluginInstantiationException ignored) {
+                }
+            });
+            return;
+        }
         randomDelay = randomDelay();
     }
 

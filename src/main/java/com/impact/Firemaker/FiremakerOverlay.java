@@ -50,7 +50,7 @@ public class FiremakerOverlay extends Overlay {
         panelComponent.getChildren().clear();
 
         panelComponent.getChildren().add(TitleComponent.builder()
-                .text("Impact PowerGather")
+                .text("Impact Firemaker")
                 .color(Color.decode("#fa5555"))
                 .build());
 

@@ -1,21 +1,15 @@
 package com.impact.SpecialAttackBar;
 
-import com.example.EthanApiPlugin.EthanApiPlugin;
-import com.example.PacketUtils.PacketUtilsPlugin;
-import com.example.PacketUtils.WidgetInfoExtended;
 import net.runelite.api.Client;
 import net.runelite.api.VarPlayer;
 import net.runelite.api.events.ClientTick;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
-import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
 
 import javax.inject.Inject;
 
-@PluginDependency(EthanApiPlugin.class)
-@PluginDependency(PacketUtilsPlugin.class)
 @PluginDescriptor(
         name = "<html><font color=\"#fa5555\">Special Attack</font></html>",
         description = "Shows special attack bar for all weapons",
@@ -29,6 +23,7 @@ public class SpecialAttackBarPlugin extends Plugin{
     private static final int SPECIAL_ATTACK_WIDGET_ID = 593;
 
     private static final int SPECIAL_ATTACK_WIDTH = 146;
+
     private static final int SPECIAL_ATTACK_HEIGHT = 12;
 
     @Subscribe

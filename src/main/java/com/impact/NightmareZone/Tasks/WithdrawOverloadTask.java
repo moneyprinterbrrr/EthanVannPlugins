@@ -1,18 +1,12 @@
 package com.impact.NightmareZone.Tasks;
 
-import java.awt.event.KeyEvent;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import net.runelite.api.Client;
-import net.runelite.api.ItemID;
 import net.runelite.api.ScriptID;
 import net.runelite.api.VarClientInt;
 import net.runelite.api.VarClientStr;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
-import net.runelite.api.widgets.WidgetItem;
 import com.impact.NightmareZone.Utils;
 import com.impact.NightmareZone.NightmareZoneConfig;
 import com.impact.NightmareZone.NightmareZonePlugin;
