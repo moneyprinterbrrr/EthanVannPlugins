@@ -2,6 +2,7 @@ package com.impact;
 
 import com.example.EthanApiPlugin.EthanApiPlugin;
 import com.example.PacketUtils.PacketUtilsPlugin;
+import com.example.PrayerFlicker.PrayerFlickerPlugin;
 import com.impact.DialogContinue.DialogContinuePlugin;
 import com.impact.HideCast.HideCastPlugin;
 import com.impact.PowerGather.PowerGatherPlugin;
@@ -17,7 +18,6 @@ import com.impact.NightmareZone.NightmareZonePlugin;
 import net.runelite.client.RuneLite;
 import net.runelite.client.externalplugins.ExternalPluginManager;
 
-// TODO: `Main` in impact plugin directory
 // TODO: jar builder
 
 public class ImpactPluginTest {
@@ -27,7 +27,7 @@ public class ImpactPluginTest {
                 NeverLogPlugin.class, AlchemyPlugin.class, ThieverPlugin.class,
                 FiremakerPlugin.class, ItemCombinePlugin.class, LavaCrafterPlugin.class,
                 NightmareZonePlugin.class, SpecialAttackBarPlugin.class, ReorderPrayersPlugin.class,
-                HideCastPlugin.class, DialogContinuePlugin.class
+                HideCastPlugin.class, DialogContinuePlugin.class, PrayerFlickerPlugin.class
         );
         RuneLite.main(args);
     }

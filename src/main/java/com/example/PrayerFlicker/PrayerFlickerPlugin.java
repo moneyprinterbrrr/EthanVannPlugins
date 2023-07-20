@@ -25,7 +25,7 @@ import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 
 @PluginDescriptor(
-        name = "Ethan PrayerFlickerPlugin",
+        name = "<html><font color=\"#3f9cf2\">Prayer Flicker</font></html>",
         description = "prayer flicker for quick prayers",
         enabledByDefault = false,
         tags = {"ethan"}
@@ -33,7 +33,7 @@ import java.lang.reflect.InvocationTargetException;
 @Slf4j
 @PluginDependency(PacketUtilsPlugin.class)
 @PluginDependency(EthanApiPlugin.class)
-public class EthanPrayerFlickerPlugin extends Plugin {
+public class PrayerFlickerPlugin extends Plugin {
     public int timeout = 0;
     @Inject
     Client client;

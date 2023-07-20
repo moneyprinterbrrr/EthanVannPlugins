@@ -6,7 +6,7 @@ import com.example.EthanApiPlugin.EthanApiPlugin;
 import com.example.LavaRunecrafter.LavaRunecrafterPlugin;
 import com.example.NightmareHelper.NightmareHelperPlugin;
 import com.example.PacketUtils.PacketUtilsPlugin;
-import com.example.PrayerFlicker.EthanPrayerFlickerPlugin;
+import com.example.PrayerFlicker.PrayerFlickerPlugin;
 import com.example.UpkeepPlugin.UpkeepPlugin;
 import com.example.gauntletFlicker.gauntletFlicker;
 import com.example.harpoon2ticker.SwordFish2Tick;
@@ -17,7 +17,7 @@ import net.runelite.client.externalplugins.ExternalPluginManager;
 
 public class ExamplePluginTest {
     public static void main(String[] args) throws Exception {
-        ExternalPluginManager.loadBuiltin(EthanApiPlugin.class, PacketUtilsPlugin.class, EthanPrayerFlickerPlugin.class,
+        ExternalPluginManager.loadBuiltin(EthanApiPlugin.class, PacketUtilsPlugin.class, PrayerFlickerPlugin.class,
                 gauntletFlicker.class,
                 SuperGlassMakerPlugin.class, UpkeepPlugin.class, LavaRunecrafterPlugin.class,
                 NightmareHelperPlugin.class, SwordFish2Tick.class, e3t4g.class,
