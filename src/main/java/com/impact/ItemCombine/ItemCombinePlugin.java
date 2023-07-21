@@ -60,7 +60,6 @@ public class ItemCombinePlugin extends Plugin {
     private int afkTicks;
     private boolean deposit;
     private boolean isMaking;
-    private int amtTwo;
 
     @Provides
     private ItemCombineConfig getConfig(ConfigManager configManager) {

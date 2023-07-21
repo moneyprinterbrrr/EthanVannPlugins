@@ -5,6 +5,8 @@ import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.Keybind;
 
+import java.awt.*;
+
 @ConfigGroup("DialogContinue")
 public interface DialogContinueConfig extends Config {
     @ConfigItem(
@@ -15,5 +17,16 @@ public interface DialogContinueConfig extends Config {
     )
     default boolean questHelper() {
         return false;
+    }
+
+    @ConfigItem(
+            keyName = "textHighlightColor",
+            name = "Text highlight colour",
+            description = "Color of text to select from Quest Helper",
+            position = 2
+    )
+    default Color textHighlightColor()
+    {
+        return Color.BLUE;
     }
 }

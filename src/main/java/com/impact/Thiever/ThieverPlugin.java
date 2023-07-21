@@ -15,6 +15,7 @@ import com.example.Packets.WidgetPackets;
 import com.google.inject.Provides;
 import lombok.SneakyThrows;
 import net.runelite.api.*;
+import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
@@ -118,7 +119,7 @@ public class ThieverPlugin extends Plugin {
 
         state = nextState;
         // TODO: add utils with gaussian delay w/ values config
-        tickDelay = ThreadLocalRandom.current().nextInt(1, 4); // reset delay
+        tickDelay = ThreadLocalRandom.current().nextInt(0, 2); // reset delay
     }
 
     private void handleState() {
@@ -164,55 +165,35 @@ public class ThieverPlugin extends Plugin {
 
         NPCs.search().withName(npcName).nearestToPlayer().ifPresent(npcObject -> {
             NPCComposition comp = NPCQuery.getNPCComposition(npcObject);
-            NPCInteraction.interact(npcObject, "Pickpocket"); // find the object we're looking for.  this specific example will only work if the first Action the object has is the one that interacts with it.
-            // don't *always* do this, you can manually type the possible actions. eg. "Mine", "Chop", "Cook", "Climb".
+            NPCInteraction.interact(npcObject, "Pickpocket");
         });
     }
 
     private void consumeFood() {
         String itemName = config.foodToConsume();
         Optional<Widget> item = Inventory.search()
-                //.filter(i -> i.getName().toLowerCase().contains(itemName.toLowerCase())) // for both lowercase
                 .nameContains(itemName)
-                // .first(); // TODO: can use .first() instead
-                .result().stream().findFirst();
+                .first();
 
-        // TODO: can also try...
-        // MousePackets.queueClickPacket();
-        // WidgetPackets.queueWidgetOnWidget(item.get(), "Eat"); // or "Drink", not sure how to get top level action
         if (item.isPresent()) {
             ItemComposition comp = ItemQuery.getItemComposition(item.get());
             InventoryInteraction.useItem(item.get(), comp.getInventoryActions()[0]);
-            tickDelay = 2; // food eat delay
+//            tickDelay = 2; // rest delay, consideringfood eat delay
         }
     }
 
     private void openPouches() {
         String itemName = "Coin pouch"; // make static var?
         Optional<Widget> item = Inventory.search()
-                //.filter(i -> i.getName().toLowerCase().contains(itemName.toLowerCase())) // for both lowercase
                 .nameContains(itemName)
-                // .first(); // TODO: can use .first() instead
-                .result().stream().findFirst();
+                .first();
 
-        // TODO: can also try...
-        // MousePackets.queueClickPacket();
-        // WidgetPackets.queueWidgetOnWidget(item.get(), "Open-all");
         if (item.isPresent()) {
             ItemComposition comp = ItemQuery.getItemComposition(item.get());
-            InventoryInteraction.useItem(item.get(), comp.getInventoryActions()[0]);
-            tickDelay = 1; // open pouch delay
-            // TODO: add utils with gaussian delay w/ values config
+            InventoryInteraction.useItem(item.get(), "Open-all");
             numPouchesToOpen = ThreadLocalRandom.current().nextInt(0, 28);
         }
     }
-
-    // TODO: use below "close" bank in `restockFood()`, findNPC will queue a movement anyway
-    // if (Bank.isOpen()) {
-    //     MousePackets.queueClickPacket();
-    //     MovementPackets.queueMovement(client.getLocalPlayer().getWorldLocation());
-    //     return;
-    // }
 
     private void restockFood() { // deposit all and withdraw food
         if (Bank.isOpen()) {
@@ -235,13 +216,12 @@ public class ThieverPlugin extends Plugin {
                 MousePackets.queueClickPacket();
                 TileObjectInteraction.interact(bankBooth.get(), "Bank");
                 // TODO: add utils with gaussian delay w/ values config
-                tickDelay = ThreadLocalRandom.current().nextInt(2, 6);
+                tickDelay = ThreadLocalRandom.current().nextInt(0, 2);
             }
         }
     }
 
     private Optional<TileObject> findBank() {
-        // TODO: EthanAPI.findObject() instead ?
         Optional<TileObject> bankBooth = TileObjects.search().filter(tileObject -> {
             ObjectComposition objectComposition = TileObjectQuery.getObjectComposition(tileObject);
             return getName().contains("Bank") ||
@@ -281,7 +261,6 @@ public class ThieverPlugin extends Plugin {
         }
         started = !started;
         tickDelay = 0;
-        // TODO: add utils with gaussian delay w/ values config
         numPouchesToOpen = ThreadLocalRandom.current().nextInt(0, 28);
         state = State.FIND_NPC;
     }

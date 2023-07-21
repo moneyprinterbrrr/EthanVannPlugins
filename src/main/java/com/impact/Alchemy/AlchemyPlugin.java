@@ -149,6 +149,7 @@ public class AlchemyPlugin extends Plugin {
         Optional<Widget> highAlchemySpellIcon = Widgets.search().withId(HIGH_ALCHEMY_WIDGET_ID).first();
         if (highAlchemySpellIcon.isPresent() && singleItem.isPresent()) {
             MousePackets.queueClickPacket();
+            MousePackets.queueClickPacket();
             WidgetPackets.queueWidgetOnWidget(highAlchemySpellIcon.get(), singleItem.get());
             tickDelay = 2; // cast delay, TODO: change to 5, when fixing ANIMATE state
         }

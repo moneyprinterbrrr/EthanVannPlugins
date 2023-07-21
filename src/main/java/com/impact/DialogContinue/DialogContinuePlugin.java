@@ -41,8 +41,6 @@ public class DialogContinuePlugin extends Plugin {
     @Inject
     PluginManager pluginManager;
 
-    private static final Color QUEST_HELPER_TEXT_COLOR = Color.BLUE;
-
     private boolean questHelperContinueTriggered;
 
     private boolean continueTriggered;
@@ -94,13 +92,11 @@ public class DialogContinuePlugin extends Plugin {
         }
 
         if (continueTriggered) {
-            System.out.println("Clicking to continue....");
             clickToContinue();
             return;
         }
 
         if (questHelperContinueTriggered) {
-            System.out.println("Clicking options to continue....");
             questHelperContinue();
             return;
         }
@@ -119,13 +115,11 @@ public class DialogContinuePlugin extends Plugin {
         }
 
         if (config.questHelper() && event.getGroupId() == WidgetID.DIALOG_OPTION_GROUP_ID) {
-            System.out.println("Quest helper triggered");
             questHelperContinueTriggered = true;
             return;
         }
 
         if (event.getGroupId() != WidgetID.DIALOG_OPTION_GROUP_ID) {
-            System.out.println("Continue dialog triggered");
             continueTriggered = true;
             return;
         }
@@ -155,7 +149,7 @@ public class DialogContinuePlugin extends Plugin {
 
     private void questHelperContinue() {
         Widgets.search().withId(WidgetInfo.DIALOG_OPTION_OPTIONS.getId()).hiddenState(false).result().forEach(option -> {
-            if (option.getTextColor() == QUEST_HELPER_TEXT_COLOR.getRGB()) {
+            if (option.getTextColor() == config.textHighlightColor().getRGB()) {
                 MousePackets.queueClickPacket();
                 WidgetPackets.queueResumePause(option.getId(), option.getIndex());
                 questHelperContinueTriggered = false;
