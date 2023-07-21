@@ -1,5 +1,9 @@
 # Impact Plugins
 
+![](https://komarev.com/ghpvc/?username=moneyprinterbrrr&color=red)
+[![stars - ImpactPlugins](https://img.shields.io/github/stars/moneyprinterbrrr/ImpactPlugins?style=social)](https://github.com/moneyprinterbrrr/ImpactPlugins)
+[![forks - ImpactPlugins](https://img.shields.io/github/forks/moneyprinterbrrr/ImpactPlugins?style=social)](https://github.com/moneyprinterbrrr/ImpactPlugins)
+
 - High Alchemy
 - Firemaker: at Varrock West bank
 - Item Combiner
