@@ -67,7 +67,12 @@ public class ConstructionOverlay extends Overlay {
                 .color(Color.ORANGE)
                 .build());
 
-        panelComponent.setPreferredSize(new Dimension(175, 130));
+        panelComponent.getChildren().add(TitleComponent.builder()
+                .text("Flick run at: " + plugin.nextRunVal)
+                .color(Color.ORANGE)
+                .build());
+
+        panelComponent.setPreferredSize(new Dimension(200, 130));
         panelComponent.setBackgroundColor(Color.BLACK);
 
         return panelComponent.render(graphics);

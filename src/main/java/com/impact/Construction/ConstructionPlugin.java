@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.Optional;
+import java.util.Random;
 
 @Slf4j
 @PluginDependency(EthanApiPlugin.class)
@@ -60,6 +61,9 @@ public class ConstructionPlugin extends Plugin {
     State state;
     boolean started;
     int tickDelay;
+    Random r = new Random();
+    int nextRunVal = r.nextInt(99) + 1;
+    private boolean hasFlickedRun = false;
 
     private static final int CALL_SERVANT_WIDGET_ID = 24248342;
     private static final int IN_HOUSE_BUILD_MODE_VARBIT = 2176;
@@ -162,7 +166,7 @@ public class ConstructionPlugin extends Plugin {
             return State.BUILD;
         }
 
-        if (state == State.REMOVE) {
+        if (state == State.REMOVE) { // TODO: remove dialog check instead?
             return State.REMOVE_DIALOG;
         }
 
@@ -208,6 +212,7 @@ public class ConstructionPlugin extends Plugin {
                 callServant();
                 break;
             case LEAVE_HOUSE:
+                handleRun();
                 leaveHouse();
                 break;
             case UNNOTE_PHIALS:
@@ -217,6 +222,7 @@ public class ConstructionPlugin extends Plugin {
                 unnotePlanksDialog();
                 break;
             case ENTER_HOUSE:
+                hasFlickedRun = false;
                 enterHouse();
                 break;
             default: // ANIMATE, WAITING_FOR_PLANKS, MISSING_TOOLS
@@ -323,6 +329,23 @@ public class ConstructionPlugin extends Plugin {
         if (portal.isPresent()){
             MousePackets.queueClickPacket();
             TileObjectInteraction.interact(ObjectID.PORTAL_15478, "Build mode");
+        }
+    }
+
+    public void handleRun()
+    {
+        if (!config.autoEnableRun())
+            return;
+
+        boolean runEnabled = client.getVarpValue(173) == 1;
+        int energy = client.getEnergy();
+
+        if (!runEnabled && !hasFlickedRun && energy > nextRunVal * 100)
+        {
+            MousePackets.queueClickPacket();
+            WidgetPackets.queueWidgetActionPacket(1, 10485787, -1, -1);
+            nextRunVal = r.nextInt(99) + 1;
+            hasFlickedRun = !hasFlickedRun;
         }
     }
 

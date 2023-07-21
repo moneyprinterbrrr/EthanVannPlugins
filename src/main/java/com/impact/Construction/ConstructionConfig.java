@@ -30,11 +30,19 @@ public interface ConstructionConfig extends Config {
             name = "Method",
             keyName = "method",
             description = "Method to use: servant or unnote with Phials",
-            position = 0
+            position = 1
     )
     default Method method() {
         return Method.PHIALS;
     }
+
+    @ConfigItem(
+            keyName = "autoEnableRun",
+            name = "Auto Enable Run",
+            description = "Enables run",
+            position = 6
+    )
+    default boolean autoEnableRun() { return true; }
 
     @ConfigItem(
             name = "Disable Paint",
