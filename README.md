@@ -9,9 +9,14 @@
 - Item Combiner
 - Lava Crafter
 - Never Log
-- Nightmare Zone: In beta proceed with caution
+- Nightmare Zone: Overloads and Absorptions, reenters dream
 - Power Gather: Gathers from object or NPC, drops items
 - Thiever: Pickpocket NPCs, banks for food
+- Construction: Builds a couple of furniture spots, unnotes at Phials
+- Special Attack Bar: Shows for all weapons
+- Reorder Prayers
+- Hide Cast: Hides spells cast on friends chat
+- Dialog Continue: Continues NPC dialog and Quest Helper options
 
 ### Contributions
 
