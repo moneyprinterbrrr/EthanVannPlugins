@@ -170,6 +170,7 @@ public class ConstructionPlugin extends Plugin {
             return State.REMOVE_DIALOG;
         }
 
+        // TODO: for myth cape, hasBuilt above hasEnoughUnnotedPlanks
         if (hasBuilt()) {
             return State.REMOVE;
         }
