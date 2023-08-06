@@ -31,7 +31,7 @@ public class ConstructionOverlay extends Overlay {
 
         this.setPriority(OverlayPriority.HIGHEST);
         this.setPosition(OverlayPosition.BOTTOM_LEFT);
-        this.getMenuEntries().add(new OverlayMenuEntry(RUNELITE_OVERLAY_CONFIG, OPTION_CONFIGURE, "Lava Crafter Overlay"));
+        this.getMenuEntries().add(new OverlayMenuEntry(RUNELITE_OVERLAY_CONFIG, OPTION_CONFIGURE, "Construction Overlay"));
     }
 
     @Override

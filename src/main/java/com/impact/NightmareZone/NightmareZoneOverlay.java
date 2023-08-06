@@ -31,7 +31,7 @@ public class NightmareZoneOverlay extends Overlay
 
         this.setPriority(OverlayPriority.HIGHEST);
         this.setPosition(OverlayPosition.BOTTOM_LEFT);
-        this.getMenuEntries().add(new OverlayMenuEntry(RUNELITE_OVERLAY_CONFIG, OPTION_CONFIGURE, "NightmareZone Overlay"));
+        this.getMenuEntries().add(new OverlayMenuEntry(RUNELITE_OVERLAY_CONFIG, OPTION_CONFIGURE, "Nightmare Zone Overlay"));
     }
 
     @Override

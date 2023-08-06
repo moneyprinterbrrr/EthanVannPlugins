@@ -23,6 +23,7 @@ dependencies {
     implementation 'org.json:json:20230227'
     implementation 'org.roaringbitmap:RoaringBitmap:0.9.44'
 }
+
 sourceSets {
 
     main {
@@ -34,28 +35,54 @@ sourceSets {
     }
 }
 
-group = 'com.example'
-version = '4.9'
+group = 'com.impact'
+version = '0.1'
 sourceCompatibility = "11"
 
-task FatJar(type: Jar) {
+task FullJar(type: Jar) {
     manifest {
         attributes 'Main-Class': 'com.example.Main'
     }
-    baseName = 'EthanVannPlugins'
+    baseName = 'EthanPlusImpactPlugins'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-    exclude("com/example/hidden")
+    exclude("com/example/ExamplePluginTest")
     with jar
 }
 
-task FatJarWithHidden(type: Jar) {
+// At build time exclude/include unnecessary plugins
+task EthanJar(type: Jar) {
     manifest {
         attributes 'Main-Class': 'com.example.Main'
     }
-    baseName = 'EthanVannPlugins'
+    baseName = 'EthanBase'
+    version = runeLiteVersion
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    exclude("com/example/AutoTele")
+    exclude("com/example/CalvarionHelper")
+    exclude("com/example/E3t4g")
+    exclude("com/example/LavaRunecrafter")
+    exclude("com/example/NightmareHelper")
+    exclude("com/example/PrayerFlicker")
+    exclude("com/example/RunEnabler")
+    exclude("com/example/UpkeepPlugin")
+    exclude("com/example/gauntletFlicker")
+    exclude("com/example/harpoon2ticker")
+    exclude("com/example/superglass")
+    exclude("com/example/ExamplePluginTest")
+    exclude("com/impact")
+    with jar
+}
+
+task ImpactJar(type: Jar) {
+    manifest {
+    }
+    baseName = 'ImpactPlugins'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    exclude("com/example")
+    exclude("com/impact/ImpactPluginTest")
     with jar
 }
 

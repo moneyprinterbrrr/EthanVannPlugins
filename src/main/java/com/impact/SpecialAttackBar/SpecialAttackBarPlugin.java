@@ -39,8 +39,8 @@ public class SpecialAttackBarPlugin extends Plugin{
                 && specBarChargeBarInner != null && specBarChargeBarInnerComponent != null)
         {
             specialAttackBar.setHidden(false);
-            for (Widget ornament : specialAttackBarOrnaments.getChildren())
-                ornament.setHidden(false);
+            // for (Widget ornament : specialAttackBarOrnaments.getChildren())
+            //    ornament.setHidden(false);
             specialAttackBarText.setHidden(false);
 
             int currentSpecValue = client.getVarpValue(VarPlayer.SPECIAL_ATTACK_PERCENT) / 10;

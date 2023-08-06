@@ -6,6 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum Method {
-    SERVANT,
+//    SERVANT,
     PHIALS
 }

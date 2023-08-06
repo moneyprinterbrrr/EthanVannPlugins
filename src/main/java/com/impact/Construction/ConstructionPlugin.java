@@ -179,12 +179,7 @@ public class ConstructionPlugin extends Plugin {
     }
 
     private State getMorePlanksState() {
-        if (config.method() == Method.SERVANT) {
-            if (state != State.CALL_SERVANT && state != State.WAITING_FOR_PLANKS) {
-                return State.CALL_SERVANT;
-            }
-            return State.WAITING_FOR_PLANKS;
-        } else { // Method.PHIALS
+        if (config.method() == Method.PHIALS ) {
             if (inBuildModeHouse()) {
                 return State.LEAVE_HOUSE;
             }
@@ -192,6 +187,11 @@ public class ConstructionPlugin extends Plugin {
                 return State.UNNOTE_PHIALS_DIALOG;
             }
             return State.UNNOTE_PHIALS;
+        } else { // Method.SERVANT
+            if (state != State.CALL_SERVANT && state != State.WAITING_FOR_PLANKS) {
+                return State.CALL_SERVANT;
+            }
+            return State.WAITING_FOR_PLANKS;
         }
     }
 
