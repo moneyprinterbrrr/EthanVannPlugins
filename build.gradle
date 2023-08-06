@@ -46,7 +46,6 @@ task FullJar(type: Jar) {
     baseName = 'EthanPlusImpactPlugins'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-    exclude("com/example/ExamplePluginTest")
     with jar
 }
 
@@ -70,7 +69,6 @@ task EthanJar(type: Jar) {
     exclude("com/example/gauntletFlicker")
     exclude("com/example/harpoon2ticker")
     exclude("com/example/superglass")
-    exclude("com/example/ExamplePluginTest")
     exclude("com/impact")
     with jar
 }
@@ -82,7 +80,6 @@ task ImpactJar(type: Jar) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     exclude("com/example")
-    exclude("com/impact/ImpactPluginTest")
     with jar
 }
 
