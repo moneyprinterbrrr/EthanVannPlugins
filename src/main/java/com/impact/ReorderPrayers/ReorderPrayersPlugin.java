@@ -27,7 +27,8 @@ import net.runelite.client.plugins.PluginDescriptor;
 @PluginDescriptor(
         name = "<html><font color=\"#fa5555\">Reorder Prayers</font></html>",
         description = "Reorder the prayers displayed on the Prayer panel",
-        tags = {"pvp"}
+        tags = {"pvp"},
+        enabledByDefault = false
 )
 public class ReorderPrayersPlugin extends Plugin
 {

@@ -13,4 +13,8 @@ public class MovementPackets {
     public static void queueMovement(WorldPoint location) {
         queueMovement(location.getX(), location.getY(), false);
     }
+
+    public static void queueMovement(WorldPoint location, boolean ctrlDown) {
+        queueMovement(location.getX(), location.getY(), ctrlDown);
+    }
 }

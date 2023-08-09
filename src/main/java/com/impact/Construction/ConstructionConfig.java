@@ -5,7 +5,7 @@ import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 import net.runelite.client.config.Keybind;
 
-@ConfigGroup("Contruction")
+@ConfigGroup("Construction")
 public interface ConstructionConfig extends Config {
     @ConfigItem(
             keyName = "Toggle",
