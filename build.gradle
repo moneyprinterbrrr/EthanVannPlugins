@@ -9,9 +9,10 @@ repositories {
         url = 'https://repo.runelite.net'
     }
     mavenCentral()
+    jcenter()
 }
 
-def runeLiteVersion = '1.10.9.2'
+def runeLiteVersion = '1.10.17.2'
 
 dependencies {
     compileOnly group: 'net.runelite', name: 'client', version: runeLiteVersion
@@ -22,10 +23,11 @@ dependencies {
     testImplementation group: 'net.runelite', name: 'jshell', version: runeLiteVersion
     implementation 'org.json:json:20230227'
     implementation 'org.roaringbitmap:RoaringBitmap:0.9.44'
+    implementation("com.google.archivepatcher:archive-patch-applier:1.0.4")
+    implementation("org.benf:cfr:0.152")
 }
 
 sourceSets {
-
     main {
 
         java {
@@ -35,9 +37,11 @@ sourceSets {
     }
 }
 
+
 group = 'com.impact'
-version = '0.1'
+version = '0.2'
 sourceCompatibility = "11"
+targetCompatibility = "11"
 
 task FullJar(type: Jar) {
     manifest {
@@ -46,6 +50,8 @@ task FullJar(type: Jar) {
     baseName = 'EthanPlusImpactPlugins'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    exclude("com/example/hidden")
+    exclude("com/example/PathingTesting")
     with jar
 }
 

@@ -26,6 +26,7 @@ import net.runelite.client.util.WildcardMatcher;
 import javax.swing.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -44,6 +45,8 @@ public class EthanApiPlugin extends Plugin {
     static Client client = RuneLite.getInjector().getInstance(Client.class);
     static PluginManager pluginManager = RuneLite.getInjector().getInstance(PluginManager.class);
     static ItemManager itemManager = RuneLite.getInjector().getInstance(ItemManager.class);
+    static Method doAction = null;
+    static String animationField = null;
     public static final int[][] directionsMap = {
             {-2, 0},
             {0, 2},
@@ -87,14 +90,16 @@ public class EthanApiPlugin extends Plugin {
     public static boolean loggedIn() {
         return client.getGameState() == GameState.LOGGED_IN;
     }
-    public static boolean inRegion(int regionID){
+
+    public static boolean inRegion(int regionID) {
         List<Integer> mapRegions = Arrays.stream(client.getMapRegions()).boxed().collect(Collectors.toList());
         return mapRegions.contains(regionID);
     }
 
-    public static WorldPoint playerPosition(){
+    public static WorldPoint playerPosition() {
         return client.getLocalPlayer().getWorldLocation();
     }
+
     public static SkullIcon getSkullIcon(Player player) {
         Field skullField = null;
         try {
@@ -106,7 +111,7 @@ public class EthanApiPlugin extends Plugin {
         }
         int var1 = -1;
         try {
-            var1 = skullField.getInt(player) * -2104548197;
+            var1 = skullField.getInt(player) * -110809851;
             skullField.setAccessible(false);
         } catch (IllegalAccessException | NullPointerException e) {
             e.printStackTrace();
@@ -148,27 +153,60 @@ public class EthanApiPlugin extends Plugin {
 
     @SneakyThrows
     public static int getAnimation(NPC npc) {
-        Field animation = npc.getClass().getSuperclass().getDeclaredField("cv");
+        if (npc == null) {
+            return -1;
+        }
+        if (animationField == null) {
+            for (Field declaredField : npc.getClass().getSuperclass().getDeclaredFields()) {
+                if (declaredField == null) {
+                    continue;
+                }
+                declaredField.setAccessible(true);
+                if (declaredField.getType() != int.class) {
+                    continue;
+                }
+                if (Modifier.isFinal(declaredField.getModifiers())) {
+                    continue;
+                }
+                if (Modifier.isStatic(declaredField.getModifiers())) {
+                    continue;
+                }
+                int value = declaredField.getInt(npc);
+                declaredField.setInt(npc, 4795789);
+                if (npc.getAnimation() == -760216869 * 4795789) {
+                    animationField = declaredField.getName();
+                    declaredField.setInt(npc, value);
+                    declaredField.setAccessible(false);
+                    break;
+                }
+                declaredField.setInt(npc, value);
+                declaredField.setAccessible(false);
+            }
+        }
+        if (animationField == null) {
+            return -1;
+        }
+        Field animation = npc.getClass().getSuperclass().getDeclaredField(animationField);
         animation.setAccessible(true);
-        int anim = animation.getInt(npc) * 1584912307;
+        int anim = animation.getInt(npc) * -760216869;
         animation.setAccessible(false);
         return anim;
     }
 
     @SneakyThrows
     public static int pathLength(NPC npc) {
-        Field pathLength = npc.getClass().getSuperclass().getDeclaredField("de");
+        Field pathLength = npc.getClass().getSuperclass().getDeclaredField("dq");
         pathLength.setAccessible(true);
-        int path = pathLength.getInt(npc) * 1557847499;
+        int path = pathLength.getInt(npc) * -1742381503;
         pathLength.setAccessible(false);
         return path;
     }
 
     @SneakyThrows
     public static int pathLength(Player player) {
-        Field pathLength = player.getClass().getSuperclass().getDeclaredField("de");
+        Field pathLength = player.getClass().getSuperclass().getDeclaredField("dq");
         pathLength.setAccessible(true);
-        int path = pathLength.getInt(player) * 1557847499;
+        int path = pathLength.getInt(player) * -1742381503;
         pathLength.setAccessible(false);
         return path;
     }
@@ -179,18 +217,19 @@ public class EthanApiPlugin extends Plugin {
         for (Method declaredMethod : npc.getComposition().getClass().getDeclaredMethods()) {
             if (declaredMethod.getReturnType() == short[].class && declaredMethod.getParameterTypes().length == 0) {
                 getHeadIconArrayMethod = declaredMethod;
-                break;
+                if (getHeadIconArrayMethod == null) {
+                    continue;
+                }
+                getHeadIconArrayMethod.setAccessible(true);
+                short[] headIconArray = (short[]) getHeadIconArrayMethod.invoke(npc.getComposition());
+                getHeadIconArrayMethod.setAccessible(false);
+                if (headIconArray == null || headIconArray.length == 0) {
+                    continue;
+                }
+                return HeadIcon.values()[headIconArray[0]];
             }
         }
-        if (getHeadIconArrayMethod == null) {
-            return null;
-        }
-        getHeadIconArrayMethod.setAccessible(true);
-        short[] headIconArray = (short[]) getHeadIconArrayMethod.invoke(npc.getComposition());
-        if (headIconArray == null || headIconArray.length == 0) {
-            return null;
-        }
-        return HeadIcon.values()[headIconArray[0]];
+        return null;
     }
 
     @Deprecated
@@ -365,12 +404,35 @@ public class EthanApiPlugin extends Plugin {
     @SneakyThrows
     public static void invoke(int var0, int var1, int var2, int var3, int var4, String var5, String var6, int var7,
                               int var8) {
-        Class invokeClass = client.getClass().getClassLoader().loadClass("ce");
-        Method invoke = invokeClass.getDeclaredMethod("kc", int.class, int.class, int.class, int.class, int.class,
-                String.class, String.class, int.class, int.class, byte.class);
-        invoke.setAccessible(true);
-        invoke.invoke(null, var0, var1, var2, var3, var4, var5, var6, var7, var8,(byte)14);
-        invoke.setAccessible(false);
+        if (doAction == null) {
+            Field classes = ClassLoader.class.getDeclaredField("classes");
+            classes.setAccessible(true);
+            ClassLoader classLoader = client.getClass().getClassLoader();
+            Vector<Class<?>> classesVector = (Vector<Class<?>>) classes.get(classLoader);
+            Class<?>[] params = new Class[]{int.class, int.class, int.class, int.class, int.class, String.class, String.class, int.class, int.class};
+            for (Class<?> aClass : classesVector) {
+                if (doAction != null) {
+                    break;
+                }
+                for (Method declaredMethod : aClass.getDeclaredMethods()) {
+                    if (declaredMethod.getParameterCount() != 10) {
+                        continue;
+                    }
+                    if (declaredMethod.getReturnType() != void.class) {
+                        continue;
+                    }
+                    if (!Arrays.equals(Arrays.copyOfRange(declaredMethod.getParameterTypes(), 0, 9), params)) {
+                        continue;
+                    }
+                    doAction = declaredMethod;
+                    System.out.println(doAction);
+                    break;
+                }
+            }
+        }
+        doAction.setAccessible(true);
+        doAction.invoke(null, var0, var1, var2, var3, var4, var5, var6, var7, var8, (byte) 88);
+        doAction.setAccessible(false);
     }
 
     @Deprecated
@@ -443,7 +505,7 @@ public class EthanApiPlugin extends Plugin {
         int pSY = client.getLocalPlayer().getLocalLocation().getSceneY();
         Point p1 = client.getScene().getTiles()[client.getPlane()][pSX][pSY].getSceneLocation();
         LocalPoint lp = LocalPoint.fromWorld(client, destinationTile);
-        if(lp == null || !lp.isInScene()){
+        if (lp == null || !lp.isInScene()) {
             return new PathResult(false, Integer.MAX_VALUE);
         }
         Point p2 = new Point(lp.getSceneX(), lp.getSceneY());
@@ -589,12 +651,12 @@ public class EthanApiPlugin extends Plugin {
     public static Client getClient() {
         return client;
     }
+
     public static ClientUI getClientUI() {
         return clientUI;
     }
 
     public static ArrayList<WorldPoint> pathToGoal(WorldPoint goal, HashSet<WorldPoint> dangerous) {
-
         ArrayList<List<WorldPoint>> paths = new ArrayList<>();
         paths.add(List.of(client.getLocalPlayer().getWorldLocation()));
         HashSet<WorldPoint> walkableTiles = new HashSet<>(reachableTiles());
@@ -606,7 +668,6 @@ public class EthanApiPlugin extends Plugin {
     }
 
     public static ArrayList<WorldPoint> pathToGoal(HashSet<WorldPoint> goalSet, HashSet<WorldPoint> dangerous) {
-
         ArrayList<List<WorldPoint>> paths = new ArrayList<>();
         paths.add(List.of(client.getLocalPlayer().getWorldLocation()));
         HashSet<WorldPoint> walkableTiles = new HashSet<>(reachableTiles());
@@ -639,6 +700,9 @@ public class EthanApiPlugin extends Plugin {
                                                    HashSet<WorldPoint> impassible, HashSet<WorldPoint> dangerous,
                                                    HashSet<WorldPoint> walkable, HashSet<WorldPoint> walked) {
         Queue<List<WorldPoint>> queue = new LinkedList<>(paths);
+        if(queue.isEmpty()){
+            queue.add(List.of(client.getLocalPlayer().getWorldLocation()));
+        }
         ArrayDeque<Node> nodeQueue = new ArrayDeque<>();
         if (Collections.disjoint(walkable, goal)) {
             return null;
@@ -1173,8 +1237,8 @@ public class EthanApiPlugin extends Plugin {
         eventBus.register(RuneLite.getInjector().getInstance(TileObjects.class));
         eventBus.register(RuneLite.getInjector().getInstance(Players.class));
         eventBus.register(RuneLite.getInjector().getInstance(Equipment.class));
-		eventBus.register(RuneLite.getInjector().getInstance(DepositBox.class));
-		eventBus.register(RuneLite.getInjector().getInstance(ShopInventory.class));
+        eventBus.register(RuneLite.getInjector().getInstance(DepositBox.class));
+        eventBus.register(RuneLite.getInjector().getInstance(ShopInventory.class));
         eventBus.register(RuneLite.getInjector().getInstance(Shop.class));
     }
 }

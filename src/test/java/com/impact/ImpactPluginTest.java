@@ -2,7 +2,6 @@ package com.impact;
 
 import com.example.EthanApiPlugin.EthanApiPlugin;
 import com.example.PacketUtils.PacketUtilsPlugin;
-import com.example.PrayerFlicker.PrayerFlickerPlugin;
 import com.impact.Agility.AgilityPlugin;
 import com.impact.Construction.ConstructionPlugin;
 import com.impact.DialogContinue.DialogContinuePlugin;
@@ -29,7 +28,7 @@ public class ImpactPluginTest {
                 NeverLogPlugin.class, AlchemyPlugin.class, ThieverPlugin.class,
                 FiremakerPlugin.class, ItemCombinePlugin.class, LavaCrafterPlugin.class,
                 NightmareZonePlugin.class, SpecialAttackBarPlugin.class, ReorderPrayersPlugin.class,
-                HideCastPlugin.class, DialogContinuePlugin.class, PrayerFlickerPlugin.class,
+                HideCastPlugin.class, DialogContinuePlugin.class,
                 ConstructionPlugin.class, AgilityPlugin.class
         );
         RuneLite.main(args);
