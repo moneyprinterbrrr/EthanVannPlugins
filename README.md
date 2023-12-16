@@ -24,8 +24,8 @@ Feel free to contribute to the code base or below :)
 
 | Coin                                                                                          | Wallet Address |
 |-----------------------------------------------------------------------------------------------|---------------|
-| ![](https://github.com/ErikThiart/cryptocurrency-icons/blob/master/icons/bitcoin.png?raw=true) | Coming Soon   |
-| ![](https://github.com/ErikThiart/cryptocurrency-icons/blob/master/icons/ethereum.png?raw=true) | Coming Soon   |
+| ![](https://github.com/ErikThiart/cryptocurrency-icons/blob/master/icons/bitcoin.png?raw=true) | bc1qctxpuvf9ekczexef8grlwz9fz8zc0mpv9n26x7 |
+| ![](https://github.com/ErikThiart/cryptocurrency-icons/blob/master/icons/ethereum.png?raw=true) | 0xd6dd12Bd97e0829A1fba60063EFb4D577e982724 |
 
 ### Acknowledgement
 
